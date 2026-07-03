@@ -1,0 +1,32 @@
+{
+  "name": "MiniTool - 免费在线工具箱",
+  "short_name": "MiniTool",
+  "description": "免费在线PDF/图片/视频处理工具箱，30+工具无需注册，纯本地处理不上传",
+  "start_url": "/minitool/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f0f1a",
+  "theme_color": "#6366f1",
+  "lang": "zh-CN",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%236366f1'/><text x='256' y='360' font-size='280' text-anchor='middle' font-family='sans-serif'>🛠️</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%236366f1'/><text x='96' y='135' font-size='105' text-anchor='middle' font-family='sans-serif'>🛠️</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "share_target": {
+    "action": "/minitool/",
+    "method": "GET"
+  },
+  "prefer_related_applications": false
+}
