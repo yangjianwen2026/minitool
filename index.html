@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MiniTool - 免费在线PDF/图片/视频处理工具箱 | 纯本地处理不上传</title>
-<link rel="manifest" href="manifest.json">
 <meta name="description" content="免费在线工具箱，支持PDF合并/拆分/转换/去水印/转Word/转Excel、图片压缩/去水印/格式转换、视频去水印/GIF转换、AI写作等30+工具。无需注册，文件全程本地浏览器处理，绝不上传到任何服务器。">
 <meta name="keywords" content="PDF合并, PDF拆分, PDF转Word, PDF转Excel, 图片压缩, 图片去水印, 视频去水印, PDF工具, 在线工具, 免费工具, 浏览器工具">
 <meta name="author" content="MiniTool">
 <meta name="robots" content="index, follow">
+<link rel="manifest" href="manifest.json">
 
 <!-- Open Graph / Social Sharing -->
 <meta property="og:type" content="website">
@@ -24,9 +24,10 @@
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.loli.net">
+<link rel="preconnect" href="https://gstatic.loli.net" crossorigin>
+<link href="https://fonts.loli.net/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -48,6 +49,7 @@
   --border: #2d2d4a;
   --text: #e2e8f0;
   --text-muted: #94a3b8;
+  --text-dim: #64748b;
   --success: #22c55e;
   --danger: #ef4444;
   --radius: 14px;
@@ -888,6 +890,47 @@ input[type="range"]::-webkit-slider-thumb {
   word-break: break-all;
 }
 
+
+/* Legal Pages */
+.legal-overlay {
+  position: fixed; inset: 0; z-index: 250;
+  background: var(--bg); overflow-y: auto;
+  animation: fadeIn 0.25s ease;
+}
+.legal-page {
+  max-width: 760px; margin: 0 auto; padding: 32px 24px 60px;
+}
+.legal-header {
+  margin-bottom: 24px;
+}
+.legal-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary-light); text-decoration: none;
+  font-size: 14px; font-weight: 600;
+  padding: 8px 16px; border-radius: 8px;
+  background: var(--surface); transition: background 0.2s;
+}
+.legal-back:hover { background: var(--surface2); }
+.legal-page h1 {
+  font-size: 28px; font-weight: 800; margin-bottom: 8px;
+}
+.legal-page h2 {
+  font-size: 17px; font-weight: 700; margin: 28px 0 10px;
+  color: var(--primary-light);
+}
+.legal-page p {
+  font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 8px;
+}
+.legal-page ul {
+  padding-left: 20px; margin-bottom: 12px;
+}
+.legal-page li {
+  font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 4px;
+}
+.legal-date {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 28px !important;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .header-inner { padding: 0; gap: 10px; }
@@ -901,6 +944,7 @@ input[type="range"]::-webkit-slider-thumb {
 </style>
 </head>
 <body>
+<noscript><div style="text-align:center;padding:80px 20px;font-family:system-ui;background:#0f0f13;color:#e2e8f0"><h1 style="font-size:24px;margin-bottom:12px">MiniTool 需要启用 JavaScript</h1><p style="color:#94a3b8">请在浏览器设置中启用 JavaScript 后刷新页面。</p></div></noscript>
 
 <!-- HEADER -->
 <header class="header">
@@ -912,7 +956,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="header-search">
       <i data-lucide="search" class="search-icon" style="width:16px;height:16px"></i>
       <input type="text" placeholder="搜索工具（输入关键词实时过滤）..." id="searchInput" oninput="filterTools()">
-      <button id="searchClear" onclick="document.getElementById('searchInput').value='';filterTools()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;display:none">✕</button>
+      <button id="searchClear" aria-label="清除搜索" onclick="document.getElementById('searchInput').value='';filterTools()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;display:none">✕</button>
     </div>
     <div class="header-badge">
       <i data-lucide="shield-check" style="width:14px;height:14px;color:var(--success)"></i>
@@ -1084,13 +1128,74 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 <!-- FOOTER -->
+
+<!-- LEGAL PAGES (hash router views) -->
+<div class="legal-overlay" id="privacyView" style="display:none">
+  <div class="legal-page">
+    <div class="legal-header">
+      <a href="#/" class="legal-back" aria-label="返回首页"><i data-lucide="arrow-left" style="width:18px;height:18px"></i> 返回首页</a>
+    </div>
+    <h1>隐私政策</h1>
+    <p class="legal-date">最后更新日期：2025年7月4日</p>
+    <p>MiniTool（以下简称"我们"）非常重视用户隐私保护。本隐私政策旨在向您说明我们如何收集、使用、存储和保护您的信息。</p>
+    <h2>1. 数据处理原则</h2>
+    <p>MiniTool 的核心设计理念是<strong>所有文件处理均在用户浏览器本地完成</strong>。我们不会将您上传的任何文件或数据传输到远程服务器。</p>
+    <ul><li>所有 PDF、图片、视频处理操作均在您的浏览器中执行</li><li>处理完成后，文件数据仅保存在您的本地设备中</li><li>关闭浏览器标签页后，所有临时数据将自动清除</li></ul>
+    <h2>2. 我们收集的信息</h2>
+    <p>我们仅收集以下最少必要信息：</p>
+    <ul><li><strong>访问日志</strong>：我们可能通过第三方分析工具收集匿名的访问统计数据</li><li><strong>本地存储</strong>：我们使用浏览器的 LocalStorage 技术保存您的偏好设置</li></ul>
+    <h2>3. 我们不收集的信息</h2>
+    <ul><li>您上传的任何文件内容</li><li>处理过程中的任何数据</li><li>您的个人身份信息（除非您主动通过反馈功能提供）</li></ul>
+    <h2>4. Cookie 使用</h2>
+    <p>我们可能使用 Cookie 和类似技术来改善网站性能和用户体验、分析网站使用情况、记住您的偏好设置。您可以通过浏览器设置管理或删除 Cookie。</p>
+    <h2>5. 第三方服务</h2>
+    <p>我们可能使用 Google Analytics（匿名访问统计分析）和 CDN 服务来加速网页资源加载。这些第三方服务有其各自的隐私政策。</p>
+    <h2>6. 数据安全</h2>
+    <ul><li>网站使用 HTTPS 加密传输</li><li>所有文件处理均在本地完成，不经过网络传输</li><li>定期审查安全措施的有效性</li></ul>
+    <h2>7. 儿童隐私</h2>
+    <p>我们的服务不面向 14 岁以下儿童。我们不会故意收集儿童的个人信息。</p>
+    <h2>8. 政策更新</h2>
+    <p>我们可能会不时更新本隐私政策。重大变更将通过网站公告通知您。</p>
+    <h2>9. 联系我们</h2>
+    <p>邮箱：support@toolmini.cn</p>
+  </div>
+</div>
+
+<div class="legal-overlay" id="termsView" style="display:none">
+  <div class="legal-page">
+    <div class="legal-header">
+      <a href="#/" class="legal-back" aria-label="返回首页"><i data-lucide="arrow-left" style="width:18px;height:18px"></i> 返回首页</a>
+    </div>
+    <h1>使用条款</h1>
+    <p class="legal-date">最后更新日期：2025年7月4日</p>
+    <p>欢迎使用 MiniTool（以下简称"本服务"）。在使用本服务之前，请仔细阅读以下使用条款。使用本服务即表示您同意遵守这些条款。</p>
+    <h2>1. 服务说明</h2>
+    <p>MiniTool 是一款免费的在线文件处理工具箱，提供 PDF、图片、视频等文件处理功能。所有文件处理均在用户浏览器本地完成。</p>
+    <ul><li>本服务以"现状"提供，不作任何明示或暗示的保证</li><li>我们保留随时修改、暂停或终止服务的权利</li><li>本服务免费提供，无需注册即可使用</li></ul>
+    <h2>2. 使用规范</h2>
+    <ul><li>遵守中华人民共和国相关法律法规</li><li>不得使用本服务处理涉及国家秘密、商业秘密或他人隐私的文件</li><li>不得利用本服务从事任何违法或侵权活动</li><li>不得通过自动化手段大规模访问或抓取本网站内容</li><li>不得尝试破坏网站安全措施或干扰正常服务运行</li></ul>
+    <h2>3. 知识产权</h2>
+    <ul><li>MiniTool 网站的所有内容受知识产权法保护</li><li>未经书面授权，不得复制、修改、分发本网站的任何内容</li><li>您通过本服务处理的文件，其知识产权归原权利人所有</li></ul>
+    <h2>4. 免责声明</h2>
+    <ul><li>本服务按"现状"提供，我们不保证服务的不间断运行或无错误</li><li>对于因使用本服务导致的任何直接或间接损失，我们不承担责任</li><li>文件处理结果仅供参考，我们不对处理结果的准确性、完整性作保证</li><li>建议用户在处理重要文件前做好备份</li></ul>
+    <h2>5. 文件处理</h2>
+    <ul><li>所有文件处理均在浏览器本地完成，不会上传到服务器</li><li>处理完成后，建议及时下载结果文件</li><li>关闭浏览器后，临时处理数据将自动清除，无法恢复</li></ul>
+    <h2>6. 条款修改</h2>
+    <p>我们保留随时修改本使用条款的权利。继续使用服务即表示您同意修改后的条款。</p>
+    <h2>7. 争议解决</h2>
+    <p>因本条款产生的争议，双方应友好协商解决。协商不成的，任何一方均可向我们所在地有管辖权的人民法院提起诉讼。</p>
+    <h2>8. 联系方式</h2>
+    <p>邮箱：support@toolmini.cn</p>
+  </div>
+</div>
+
 <footer class="footer">
   <div style="max-width:800px;margin:0 auto">
     <p style="margin-bottom:8px">MiniTool · 纯浏览器端处理 · 所有文件均在本地处理，不会上传到任何服务器</p>
     <p style="margin-bottom:10px">© 2025 MiniTool. All rights reserved.</p>
     <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">
-      <a href="/privacy.html" style="color:var(--primary-light);text-decoration:none;font-size:12px">隐私政策</a>
-      <a href="/terms.html" style="color:var(--primary-light);text-decoration:none;font-size:12px">使用条款</a>
+      <a href="#/privacy" style="color:var(--primary-light);text-decoration:none;font-size:12px">隐私政策</a>
+      <a href="#/terms" style="color:var(--primary-light);text-decoration:none;font-size:12px">使用条款</a>
       <a href="javascript:void(0)" onclick="openFeedback()" style="color:var(--primary-light);text-decoration:none;font-size:12px;cursor:pointer">问题反馈</a>
     </div>
   </div>
@@ -1172,7 +1277,7 @@ function renderTools(category = 'all') {
     html += `<div class="tools-grid" data-cat="${cat}">`;
     catTools.forEach(tool => {
       html += `
-      <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" data-name="${tool.name}" onclick="openTool('${tool.id}')">
+      <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" data-name="${tool.name}" onclick="openTool('${tool.id}')" tabindex="0" role="button" aria-label="${tool.name} - ${tool.desc}" onkeydown="if(event.key==='Enter')openTool('${tool.id}')">
         <div class="tool-card-inner">
           <div class="tool-icon"><i data-lucide="${tool.icon}" style="width:22px;height:22px"></i></div>
           <h3>${tool.name}</h3>
@@ -1180,7 +1285,7 @@ function renderTools(category = 'all') {
           ${tool.guide ? '<p class="tool-guide">' + tool.guide.replace(/\n/g, '<br>') + '</p>' : ''}
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
             <span class="tool-tag">${tool.formats[0] === 'text' ? '文字' : tool.formats.map(f=>f.replace('.','')).join('/')}</span>
-            <a href="${tool.slug ? '/tools/' + tool.slug + '.html' : '#'}" class="tool-link" onclick="event.stopPropagation()" title="独立页面打开">🔗</a>
+            <a href="#/${tool.slug || ''}" class="tool-link" onclick="event.stopPropagation()" title="独立页面打开" aria-label="在独立页面打开${tool.name}">🔗</a>
           </div>
         </div>
       </div>`;
@@ -1241,6 +1346,14 @@ function openTool(id) {
 
 function closeWorkspace() {
   document.getElementById('workspaceOverlay').classList.remove('open');
+  // If on a tool hash route, navigate back to home
+  const hash = location.hash.replace('#', '');
+  const parts = hash.split('/').filter(Boolean);
+  if (parts.length > 0 && TOOL_SLUG_MAP[parts[0]]) {
+    location.hash = '#/';
+  } else {
+    document.getElementById('mainContent').style.display = '';
+  }
   currentTool = null;
   clearFiles();
 }
@@ -1610,13 +1723,34 @@ async function toolJpgToPdf() {
   const { PDFDocument } = PDFLib;
   const pdf = await PDFDocument.create();
   for (const file of uploadedFiles) {
-    const buf = await file.arrayBuffer();
     const ext = file.name.split('.').pop().toLowerCase();
     let img;
-    if (ext === 'png') {
+    // WebP and GIF must be converted via canvas first (pdf-lib only supports JPG/PNG)
+    if (ext === 'webp' || ext === 'gif') {
+      const image = await loadImage(file);
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      const pngBlob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+      const pngBuf = await pngBlob.arrayBuffer();
+      img = await pdf.embedPng(pngBuf);
+    } else if (ext === 'png') {
+      const buf = await file.arrayBuffer();
       img = await pdf.embedPng(buf);
     } else {
-      img = await pdf.embedJpg(buf);
+      // jpg/jpeg — try embedJpg first, fallback to canvas conversion
+      try {
+        const buf = await file.arrayBuffer();
+        img = await pdf.embedJpg(buf);
+      } catch {
+        const image = await loadImage(file);
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+        canvas.getContext('2d').drawImage(image, 0, 0);
+        const jpgBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.92));
+        const jpgBuf = await jpgBlob.arrayBuffer();
+        img = await pdf.embedJpg(jpgBuf);
+      }
     }
     const page = pdf.addPage([img.width, img.height]);
     page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
@@ -1634,27 +1768,34 @@ async function toolPdfCompress() {
   const pdf = await PDFDocument.load(buf);
   // Re-save with compression options
   const bytes = await pdf.save({ useObjectStreams: true });
-  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'compressed.pdf');
-  hideProgress();
-  const ratio = ((1 - bytes.length / buf.byteLength) * 100).toFixed(1);
-  showOutput(`压缩完成！原始大小: ${formatSize(buf.byteLength)} → 压缩后: ${formatSize(bytes.length)}，体积减少 ${ratio}%`);
+  const origSize = buf.byteLength;
+  const newSize = bytes.length;
+  const ratio = ((1 - newSize / origSize) * 100).toFixed(1);
+  if (newSize >= origSize) {
+    // File got bigger — just offer the original
+    saveBlob(new Blob([buf], {type:'application/pdf'}), file.name);
+    hideProgress();
+    showOutput(`该PDF已经过优化，无法进一步压缩。\n原始大小: ${formatSize(origSize)}，重保存后: ${formatSize(newSize)}（变大 ${Math.abs(ratio)}%）\n\n已为您保存原始文件。\n💡 提示：如需压缩PDF中的图片，建议使用专业工具（如 Adobe Acrobat、Ghostscript）。`);
+  } else {
+    saveBlob(new Blob([bytes], {type:'application/pdf'}), 'compressed_' + file.name);
+    hideProgress();
+    showOutput(`压缩完成！原始大小: ${formatSize(origSize)} → 压缩后: ${formatSize(newSize)}，体积减少 ${ratio}%`);
+  }
 }
 
 async function toolPdfEncrypt() {
-  const { PDFDocument } = PDFLib;
   const pwd = document.getElementById('ctrlPwd').value;
   if (!pwd) { toast('请输入密码', 'error'); hideProgress(); return; }
   const file = uploadedFiles[0];
+  // pdf-lib does NOT support encryption — userPassword/ownerPassword are silently ignored
+  // We save the file as-is and warn the user
   const buf = await file.arrayBuffer();
+  const { PDFDocument } = PDFLib;
   const pdf = await PDFDocument.load(buf);
-  const bytes = await pdf.save({ 
-    userPassword: pwd, 
-    ownerPassword: pwd,
-    permissions: { printing: 'highPrint', modifying: false, copying: false, annotating: false, fillingForms: false, contentAccessibility: true }
-  });
-  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'encrypted.pdf');
+  const bytes = await pdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), file.name);
   hideProgress();
-  showOutput('加密完成！PDF已添加打开密码保护，下载后需输入密码才能打开。');
+  showOutput('⚠️ 重要提示：当前浏览器端 PDF 库（pdf-lib）不支持真正的加密功能。\n\n您设置的密码「' + pwd + '」未被应用，下载的文件仍是未加密的。\n\n建议使用以下方式加密PDF：\n1. 使用 qpdf 命令：qpdf --encrypt USER_PW OWNER_PW 256 -- input.pdf output.pdf\n2. 使用 LibreOffice 导出PDF时设置密码\n3. 使用 Adobe Acrobat 等专业软件\n\n我们对此造成的不便深表歉意，后续将集成支持加密的库。');
 }
 
 async function toolPdfUnlock() {
@@ -1898,23 +2039,32 @@ async function toolImgCrop() {
   
   // Selection box drawing
   let selStart = null;
-  canvasWrap.addEventListener('mousedown', e => {
+  // Unified pointer event helper (supports mouse + touch)
+  function getPointerPos(e) {
+    const touch = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
     const rect = cvs.getBoundingClientRect();
     const scaleX = cvs.width / rect.width;
     const scaleY = cvs.height / rect.height;
-    selStart = { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
-  });
+    return { x: (touch.clientX - rect.left) * scaleX, y: (touch.clientY - rect.top) * scaleY };
+  }
+  canvasWrap.addEventListener('mousedown', e => { selStart = getPointerPos(e); });
+  canvasWrap.addEventListener('touchstart', e => { e.preventDefault(); selStart = getPointerPos(e); }, {passive:false});
   canvasWrap.addEventListener('mouseup', e => {
     if (!selStart) return;
-    const rect = cvs.getBoundingClientRect();
-    const scaleX = cvs.width / rect.width;
-    const scaleY = cvs.height / rect.height;
-    const ex = (e.clientX - rect.left) * scaleX;
-    const ey = (e.clientY - rect.top) * scaleY;
+    const ex = getPointerPos(e).x, ey = getPointerPos(e).y;
     const x = Math.min(selStart.x, ex);
     const y = Math.min(selStart.y, ey);
     const w = Math.abs(ex - selStart.x);
     const h = Math.abs(ey - selStart.y);
+  });
+  canvasWrap.addEventListener('touchend', e => {
+    if (!selStart) return;
+    e.preventDefault();
+    const endPos = getPointerPos(e);
+    const x = Math.min(selStart.x, endPos.x);
+    const y = Math.min(selStart.y, endPos.y);
+    const w = Math.abs(endPos.x - selStart.x);
+    const h = Math.abs(endPos.y - selStart.y);
     if (w > 10 && h > 10) {
       sel.x = x; sel.y = y; sel.w = w; sel.h = h;
       // Crop
@@ -1942,6 +2092,15 @@ async function toolImgCrop() {
     const y = Math.min(selStart.y, ey);
     const w = Math.abs(ex - selStart.x);
     const h = Math.abs(ey - selStart.y);
+  });
+  canvasWrap.addEventListener('touchend', e => {
+    if (!selStart) return;
+    e.preventDefault();
+    const endPos = getPointerPos(e);
+    const x = Math.min(selStart.x, endPos.x);
+    const y = Math.min(selStart.y, endPos.y);
+    const w = Math.abs(endPos.x - selStart.x);
+    const h = Math.abs(endPos.y - selStart.y);
     // Draw selection on top
     const topCtx = document.createElement('canvas').getContext('2d');
     // Just highlight via overlay
@@ -2151,43 +2310,68 @@ async function toolVidToGif() {
   const start = parseFloat(document.getElementById('ctrlGifStart')?.value || 0);
   const end = parseFloat(document.getElementById('ctrlGifEnd')?.value || 3);
   const gifW = parseInt(document.getElementById('ctrlGifW')?.value || 320);
-  
+
   const file = uploadedFiles[0];
   const video = document.createElement('video');
   video.src = URL.createObjectURL(file);
   video.muted = true;
   await new Promise(r => video.onloadedmetadata = r);
-  
-  video.currentTime = start;
-  await new Promise(r => video.onseeked = r);
-  
+
+  const dur = video.duration;
+  const actualEnd = Math.min(end, dur);
   const ratio = video.videoHeight / video.videoWidth;
+  const gifH = Math.round(gifW * ratio);
+
+  // Load gif.js library dynamically
+  if (!window.GIF) {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js';
+    document.head.appendChild(s);
+    await new Promise((resolve, reject) => { s.onload = resolve; s.onerror = reject; });
+  }
+
   const canvas = document.createElement('canvas');
-  canvas.width = gifW;
-  canvas.height = Math.round(gifW * ratio);
+  canvas.width = gifW; canvas.height = gifH;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  
-  canvas.toBlob(blob => {
+
+  const gif = new GIF({
+    workers: 2, quality: 10, width: gifW, height: gifH,
+    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+  });
+
+  const fps = 8;
+  const totalFrames = Math.min(50, Math.floor((actualEnd - start) * fps));
+  const step = (actualEnd - start) / totalFrames;
+
+  for (let i = 0; i < totalFrames; i++) {
+    video.currentTime = start + i * step;
+    await new Promise(r => video.onseeked = r);
+    ctx.drawImage(video, 0, 0, gifW, gifH);
+    gif.addFrame(ctx, { copy: true, delay: Math.round(1000 / fps) });
+    updateProgress(i + 1, totalFrames, `截取帧 ${i+1}/${totalFrames}...`);
+  }
+
+  gif.on('finished', blob => {
     saveBlob(blob, 'clip.gif');
     hideProgress();
-    showOutput(`GIF生成完成！尺寸: ${canvas.width}×${canvas.height}px，截取时间: ${start}-${end}秒`);
-  }, 'image/gif');
+    showOutput(`动态GIF生成完成！尺寸: ${gifW}×${gifH}px，帧数: ${totalFrames}，时长: ${(actualEnd - start).toFixed(1)}秒`);
+  });
+
+  gif.on('progress', p => {
+    const pct = Math.round(p * 100);
+    updateProgress(pct, 100, `编码GIF ${pct}%...`);
+  });
+
+  gif.render();
 }
 
 async function toolGifToVid() {
   const file = uploadedFiles[0];
-  const img = await loadImage(file);
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-  canvas.toBlob(blob => {
-    saveBlob(blob, 'gif_as_image.png');
-    hideProgress();
-    showOutput('GIF已作为静态图片保存！注意：GIF动态效果需要在支持GIF的浏览器/工具中查看。');
-  }, 'image/png');
+  // Browser cannot re-encode video without MediaRecorder/WebCodecs pipeline
+  // Provide the original GIF file for download, and explain limitations
+  saveBlob(file, file.name);
+  hideProgress();
+  showOutput('已保存原始GIF文件。\n\n⚠️ 提示：浏览器端无法直接将GIF转为MP4视频。\n建议使用以下方法：\n1. 使用 FFmpeg 命令：ffmpeg -i input.gif -movflags faststart output.mp4\n2. 使用在线转换工具（如 ezgif.com）\n3. 使用专业视频编辑软件');
 }
 
 async function toolVidThumb() {
@@ -2218,7 +2402,7 @@ async function toolAiPolish() {
   const text = document.getElementById('aiTextInput')?.value;
   if (!text?.trim()) { toast('请输入要润色的文字', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【润色后】
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【润色参考】
 
 ${text}
 
@@ -2235,7 +2419,7 @@ async function toolAiContinue() {
   const text = document.getElementById('aiTextInput')?.value;
   if (!text?.trim()) { toast('请输入文章开头', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【续写内容】
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【续写参考】
 
 ${text}...
 
@@ -2250,7 +2434,7 @@ async function toolAiTitle() {
   const text = document.getElementById('aiTextInput')?.value;
   if (!text?.trim()) { toast('请输入文章内容', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【推荐标题】
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【标题参考】
 
 1. **${text.slice(0,15)}…背后的秘密（99%的人都不知道）**
 2. **关于${text.slice(0,10)}…，你必须知道的5件事**
@@ -2266,7 +2450,7 @@ async function toolAiSummary() {
   const sentences = text.split(/[。！？]/).filter(s => s.trim().length > 10);
   const keyPoints = sentences.slice(0, Math.min(3, sentences.length));
   hideProgress();
-  showOutput(`【内容摘要】
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【摘要参考】
 
 📌 **核心要点：**
 ${keyPoints.map((s,i) => `${i+1}. ${s.trim()}`).join('\n')}
@@ -2284,7 +2468,7 @@ async function toolAiMarketing() {
   const text = document.getElementById('aiTextInput')?.value;
   if (!text?.trim()) { toast('请输入产品或服务信息', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【营销文案】
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【文案参考】
 
 ---
 
@@ -2304,7 +2488,7 @@ async function toolAiMarketing() {
 
 ---
 
-*本文案由 MiniTool AI 生成，仅供参考。*`);
+*本文案由 MiniTool 本地模板生成（非AI），仅供参考。如需AI智能生成，请使用专业AI写作工具。*`);
 }
 
 // ─── PDF to Word/Excel ───
@@ -2692,23 +2876,39 @@ async function toolVidUnwatermark() {
   wrapper.appendChild(selCanvas);
 
   let sel = null, startPt = null;
-  selCanvas.addEventListener('mousedown', e => {
+  function getVidPointerPos(e) {
+    const t = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
     const r = selCanvas.getBoundingClientRect();
-    startPt = { x: (e.clientX - r.left) * (dw/r.width), y: (e.clientY - r.top) * (dh/r.height) };
-  });
+    return { x: (t.clientX - r.left) * (dw/r.width), y: (t.clientY - r.top) * (dh/r.height) };
+  }
+  selCanvas.addEventListener('mousedown', e => { startPt = getVidPointerPos(e); });
+  selCanvas.addEventListener('touchstart', e => { e.preventDefault(); startPt = getVidPointerPos(e); }, {passive:false});
   selCanvas.addEventListener('mousemove', e => {
     if (!startPt) return;
-    const r = selCanvas.getBoundingClientRect();
-    const ex = (e.clientX - r.left) * (dw/r.width);
-    const ey = (e.clientY - r.top) * (dh/r.height);
+    const pos = getVidPointerPos(e);
     sc.clearRect(0,0,dw,dh);
-    sc.strokeRect(startPt.x, startPt.y, ex-startPt.x, ey-startPt.y);
+    sc.strokeRect(startPt.x, startPt.y, pos.x-startPt.x, pos.y-startPt.y);
   });
+  selCanvas.addEventListener('touchmove', e => {
+    if (!startPt) return;
+    e.preventDefault();
+    const pos = getVidPointerPos(e);
+    sc.clearRect(0,0,dw,dh);
+    sc.strokeRect(startPt.x, startPt.y, pos.x-startPt.x, pos.y-startPt.y);
+  }, {passive:false});
   selCanvas.addEventListener('mouseup', e => {
     if (!startPt) return;
-    const r = selCanvas.getBoundingClientRect();
-    const ex = (e.clientX - r.left) * (dw/r.width);
-    const ey = (e.clientY - r.top) * (dh/r.height);
+    const pos = getVidPointerPos(e);
+    const ex = pos.x, ey = pos.y;
+    sel = { x: Math.max(0,Math.min(startPt.x,ex)), y: Math.max(0,Math.min(startPt.y,ey)),
+            w: Math.abs(ex-startPt.x), h: Math.abs(ey-startPt.y) };
+    startPt = null;
+  });
+  selCanvas.addEventListener('touchend', e => {
+    if (!startPt) return;
+    e.preventDefault();
+    const pos = getVidPointerPos(e);
+    const ex = pos.x, ey = pos.y;
     sel = { x: Math.max(0,Math.min(startPt.x,ex)), y: Math.max(0,Math.min(startPt.y,ey)),
             w: Math.abs(ex-startPt.x), h: Math.abs(ey-startPt.y) };
     startPt = null;
@@ -2770,9 +2970,9 @@ async function doVidUnwatermark(file, video, dur, sel, scale, method) {
     // Sample keyframes throughout the video
     const totalFrames = Math.min(30, Math.ceil(dur * 2));
     const blob = await processVideoFrames(video, dur, totalFrames, sel, scale, method);
-    saveBlob(blob, file.name.replace(/\.[^.]+$/, '') + '_no_watermark.mp4');
+    saveBlob(blob, file.name.replace(/\.[^.]+$/, '') + '_no_watermark_frames.zip');
     hideProgress();
-    showOutput(`视频去水印完成！处理了 ${totalFrames} 个关键帧，使用「${method === 'blur' ? '高斯模糊' : method === 'crop' ? '裁剪移除' : '内容填充'}」方式处理水印区域。\n\n💡 提示：复杂水印建议分段处理或使用专业软件。`);
+    showOutput(`视频去水印完成！处理了 ${totalFrames} 个关键帧，使用「${method === 'blur' ? '高斯模糊' : method === 'crop' ? '裁剪移除' : '内容填充'}」方式处理水印区域。\n\n📦 输出为处理后的帧序列（ZIP压缩包），非视频文件。\n如需合成视频，请使用 FFmpeg：ffmpeg -i frame_%03d.png output.mp4\n\n💡 提示：复杂水印建议分段处理或使用专业软件。`);
   } catch (err) {
     hideProgress();
     toast('处理失败: ' + err.message, 'error');
@@ -2936,8 +3136,6 @@ lucide.createIcons();
 document.getElementById('workspaceOverlay').addEventListener('click', e => {
   if (e.target === document.getElementById('workspaceOverlay')) closeWorkspace();
 });
-</script>
-
 
 // ─────────────────────────────────────────────
 // RECENT TOOLS (LocalStorage)
@@ -3047,8 +3245,15 @@ function filterTools() {
 // ─────────────────────────────────────────────
 // We need to patch the existing openTool function
 const _originalOpenTool = openTool;
-openTool = function(id) {
+openTool = function(id, fromRoute) {
   addRecentTool(id);
+  // Update hash without triggering route handler (if not already from route)
+  if (!fromRoute) {
+    const tool = TOOLS.find(t => t.id === id);
+    if (tool && tool.slug) {
+      history.pushState(null, '', '#/' + tool.slug);
+    }
+  }
   _originalOpenTool(id);
 };
 
@@ -3057,20 +3262,85 @@ openTool = function(id) {
 // ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderRecentTools();
+  // Handle initial hash route after tools are rendered
+  if (location.hash && location.hash !== '#' && location.hash !== '#/') {
+    handleRoute();
+  }
 });
 
-<!-- PWA Service Worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').then(reg => {
-        console.log('SW registered:', reg.scope);
-      }).catch(err => console.log('SW registration failed:', err));
-    });
-  }
+// ─────────────────────────────────────────────
+// HASH ROUTER
+// ─────────────────────────────────────────────
+const TOOL_SLUG_MAP = {
+  'pdf-merge':'pdf_merge','pdf-split':'pdf_split','pdf-to-jpg':'pdf_to_jpg',
+  'jpg-to-pdf':'jpg_to_pdf','pdf-compress':'pdf_compress','pdf-encrypt':'pdf_encrypt',
+  'pdf-unlock':'pdf_unlock','pdf-sign':'pdf_sign','pdf-rotate':'pdf_rotate',
+  'pdf-extract':'pdf_extract','pdf-to-word':'pdf_to_word','pdf-to-excel':'pdf_to_excel',
+  'img-compress':'img_compress','img-convert':'img_convert','img-resize':'img_resize',
+  'img-crop':'img_crop','img-rotate':'img_rotate','img-watermark':'img_watermark',
+  'img-grid':'img_grid','img-join':'img_join','img-unwatermark':'img_unwatermark',
+  'vid-to-gif':'vid_to_gif','gif-to-vid':'gif_to_vid','vid-thumb':'vid_thumb',
+  'vid-unwatermark':'vid_unwatermark','ai-polish':'ai_polish','ai-continue':'ai_continue',
+  'ai-title':'ai_title','ai-summary':'ai_summary','ai-marketing':'ai_marketing'
+};
 
-  // PWA: Show share bar and generate QR code
-  window.addEventListener('load', () => {
+function hideAllViews() {
+  document.getElementById('mainContent').style.display = '';
+  document.getElementById('privacyView').style.display = 'none';
+  document.getElementById('termsView').style.display = 'none';
+  const ws = document.getElementById('workspaceOverlay');
+  if (ws.classList.contains('open')) closeWorkspace();
+}
+
+function handleRoute() {
+  const hash = location.hash.replace('#', '') || '/';
+  const parts = hash.split('/').filter(Boolean);
+
+  hideAllViews();
+
+  if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) {
+    // Home
+    document.getElementById('mainContent').style.display = '';
+    document.title = 'MiniTool - 免费在线PDF/图片/视频处理工具箱 | 纯本地处理不上传';
+  } else if (parts[0] === 'privacy') {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('privacyView').style.display = '';
+    document.title = '隐私政策 - MiniTool';
+    lucide.createIcons();
+  } else if (parts[0] === 'terms') {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('termsView').style.display = '';
+    document.title = '使用条款 - MiniTool';
+    lucide.createIcons();
+  } else {
+    // Tool route: #/pdf-merge
+    const slug = parts[0];
+    const toolId = TOOL_SLUG_MAP[slug];
+    if (toolId) {
+      document.getElementById('mainContent').style.display = 'none';
+      openTool(toolId, true);
+      const tool = TOOLS.find(t => t.id === toolId);
+      if (tool) document.title = tool.name + ' - MiniTool 免费在线工具';
+    } else {
+      // Unknown route, go home
+      document.getElementById('mainContent').style.display = '';
+      location.hash = '#/';
+    }
+  }
+}
+
+// Listen for hash changes (browser back/forward)
+window.addEventListener('hashchange', handleRoute);
+
+// Handle initial route
+if (location.hash && location.hash !== '#' && location.hash !== '#/') {
+  // Defer to after DOM ready
+  setTimeout(handleRoute, 100);
+}
+
+
+// PWA: Show share bar and generate QR code
+window.addEventListener('load', () => {
     // Detect if likely on mobile
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
     const shareBar = document.getElementById('shareBar');
