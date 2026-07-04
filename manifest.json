@@ -2,7 +2,7 @@
   "name": "MiniTool - 免费在线工具箱",
   "short_name": "MiniTool",
   "description": "免费在线PDF/图片/视频处理工具箱，30+工具无需注册，纯本地处理不上传",
-  "start_url": "/minitool/",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0f0f1a",
@@ -25,7 +25,7 @@
   ],
   "screenshots": [],
   "share_target": {
-    "action": "/minitool/",
+    "action": "/",
     "method": "GET"
   },
   "prefer_related_applications": false

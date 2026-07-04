@@ -1,9 +1,11 @@
 // MiniTool Service Worker
 const CACHE_NAME = 'minitool-v1';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/privacy.html',
+  '/terms.html'
 ];
 
 // Install: cache core assets
