@@ -1,0 +1,12 @@
+# robots.txt for MiniTool
+# https://toolmini.cn/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://toolmini.cn/sitemap.xml
+
+# Disallow admin or private pages (if any in the future)
+# Disallow: /admin/
+# Disallow: /private/
