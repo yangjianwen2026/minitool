@@ -3,30 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MiniTool - 免费在线PDF/图片/视频处理工具�?| 纯本地处理不上传</title>
+<title>MiniTool - 免费在线PDF/图片/视频处理工具箱 | 纯本地处理不上传</title>
 <link rel="manifest" href="manifest.json">
-<meta name="description" content="免费在线工具箱，支持PDF合并/拆分/转换/去水�?转Word/转Excel、图片压�?去水�?格式转换、视频去水印/GIF转换、AI写作�?0+工具。无需注册，文件全程本地浏览器处理，绝不上传到任何服务器�?>
-<meta name="keywords" content="PDF合并, PDF拆分, PDF转Word, PDF转Excel, 图片压缩, 图片去水�? 视频去水�? PDF工具, 在线工具, 免费工具, 浏览器工�?>
+<meta name="description" content="免费在线工具箱，支持PDF合并/拆分/转换/去水印/转Word/转Excel、图片压缩/去水印/格式转换、视频去水印/GIF转换、AI写作等30+工具。无需注册，文件全程本地浏览器处理，绝不上传到任何服务器。">
+<meta name="keywords" content="PDF合并, PDF拆分, PDF转Word, PDF转Excel, 图片压缩, 图片去水印, 视频去水印, PDF工具, 在线工具, 免费工具, 浏览器工具">
 <meta name="author" content="MiniTool">
 <meta name="robots" content="index, follow">
 
 <!-- Open Graph / Social Sharing -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="MiniTool - 免费在线PDF/图片/视频处理工具�?>
-<meta property="og:description" content="30+免费在线工具，PDF合并/拆分/转换、图片压�?去水印、视频去水印等。纯浏览器本地处理，无需注册，绝不上传�?>
-<meta property="og:url" content="https://toolmini.cn/">
-<meta property="og:image" content="https://toolmini.cn/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:title" content="MiniTool - 免费在线PDF/图片/视频处理工具箱">
+<meta property="og:description" content="30+免费在线工具，PDF合并/拆分/转换、图片压缩/去水印、视频去水印等。纯浏览器本地处理，无需注册，绝不上传。">
+<meta property="og:url" content="https://yangjianwen2026.github.io/minitool/">
 <meta property="og:site_name" content="MiniTool">
 
 <!-- Twitter Card -->
-<meta name="twitter:image" content="https://toolmini.cn/og-image.png">
-<meta name="twitter:title" content="MiniTool - 免费在线工具�?>
-<meta name="twitter:description" content="30+免费工具，PDF/图片/视频处理，纯本地处理不上传�?>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MiniTool - 免费在线工具箱">
+<meta name="twitter:description" content="30+免费工具，PDF/图片/视频处理，纯本地处理不上传。">
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠�?/text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -36,6 +33,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
 :root {
@@ -805,9 +803,9 @@ input[type="range"]::-webkit-slider-thumb {
 <!-- HERO -->
 <div class="hero">
   <h1>你的文件处理<span class="highlight">瑞士军刀</span></h1>
-  <p>PDF、图片、视频、AI写作 �?全部免费，无需注册，数据全程本地处理，绝不外传�?/p>
+  <p>PDF、图片、视频、AI写作 — 全部免费，无需注册，数据全程本地处理，绝不外传。</p>
   <div class="hero-stats">
-    <div class="stat-item"><div class="num">30+</div><div class="label">精选工�?/div></div>
+    <div class="stat-item"><div class="num">30+</div><div class="label">精选工具</div></div>
     <div class="stat-item"><div class="num">100%</div><div class="label">免费使用</div></div>
     <div class="stat-item"><div class="num">0</div><div class="label">隐私泄露</div></div>
   </div>
@@ -857,7 +855,6 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="workspace-title">
         <h2 id="wsTitle"></h2>
         <p id="wsDesc"></p>
-        <p id="wsTips" style="font-size:11px;color:var(--accent);margin-top:6px;line-height:1.6;"></p>
       </div>
       <button class="workspace-close" onclick="closeWorkspace()">
         <i data-lucide="x" style="width:18px;height:18px"></i>
@@ -869,7 +866,7 @@ input[type="range"]::-webkit-slider-thumb {
         <div class="drop-zone-icon">
           <i data-lucide="upload-cloud" style="width:40px;height:40px"></i>
         </div>
-        <h3>拖拽文件到此�?/h3>
+        <h3>拖拽文件到此处</h3>
         <p>或点击选择文件</p>
         <div class="formats" id="formatChips"></div>
         <input type="file" id="fileInput" multiple>
@@ -896,7 +893,7 @@ input[type="range"]::-webkit-slider-thumb {
       <!-- Progress -->
       <div class="progress-wrap" id="progressWrap">
         <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
-        <div class="progress-text" id="progressText">处理�?..</div>
+        <div class="progress-text" id="progressText">处理中...</div>
       </div>
 
       <!-- Output -->
@@ -912,7 +909,8 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="btn-row" id="btnRow" style="display:none">
         <button class="btn btn-primary" id="processBtn" onclick="runTool()">
           <i data-lucide="play" style="width:15px;height:15px"></i>
-          开始处�?        </button>
+          开始处理
+        </button>
         <button class="btn btn-secondary" onclick="closeWorkspace()">关闭</button>
       </div>
     </div>
@@ -924,22 +922,19 @@ input[type="range"]::-webkit-slider-thumb {
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>MiniTool · 纯浏览器端处�?· 所有文件均在本地处理，不会上传到任何服务器</p>
-  <p style="margin-top:6px">© 2025 MiniTool. All rights reserved. 
-    · <a href="/privacy.html" style="color:var(--primary-light);text-decoration:none;">隐私政策</a>
-    · <a href="/terms.html" style="color:var(--primary-light);text-decoration:none;">使用条款</a>
-    · <a href="javascript:void(0)" onclick="showFeedback()" style="color:var(--primary-light);text-decoration:none;">问题反馈</a></p>
-<!-- 分享二维码区�?-->
+  <p>MiniTool · 纯浏览器端处理 · 所有文件均在本地处理，不会上传到任何服务器</p>
+  <p style="margin-top:6px">© 2025 MiniTool · 仅供学习交流使用</p>
+<!-- 分享二维码区域 -->
 <div id="shareBar" style="display:none;text-align:center;padding:32px 20px 16px;border-top:1px solid var(--border);margin-top:40px;">
   <h3 style="color:var(--text);font-size:15px;margin:0 0 4px;font-weight:700;">📱 微信扫码使用</h3>
   <p style="color:var(--text-dim);font-size:12px;margin:0 0 16px;">长按识别二维码，或分享给朋友</p>
   <div style="display:inline-block;background:white;border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);">
-    <img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://toolmini.cn/" alt="扫码访问 MiniTool" style="width:140px;height:140px;display:block;border:none;">
+    <img id="qrImg" src="" alt="QR Code" style="width:140px;height:140px;display:block;border:none;">
   </div>
-  <p style="color:var(--text-dim);font-size:12px;margin:12px 0 0;">点击右上�?··· 添加到我的小程序</p>
+  <p style="color:var(--text-dim);font-size:12px;margin:12px 0 0;">点击右上角 ··· 添加到我的小程序</p>
 </div>
 
-</footer>
+<footer>
 
 <script>
 // ─────────────────────────────────────────────
@@ -947,120 +942,40 @@ input[type="range"]::-webkit-slider-thumb {
 // ─────────────────────────────────────────────
 const TOOLS = [
   // PDF
-  { id: 'pdf_merge',      cat: 'pdf',   icon: 'file-plus',      name: '合并PDF',        desc: '将多个PDF合并为一个文�?,        formats: ['.pdf'],           hasControls: false },
+  { id: 'pdf_merge',      cat: 'pdf',   icon: 'file-plus',      name: '合并PDF',        desc: '将多个PDF合并为一个文件',        formats: ['.pdf'],           hasControls: false },
   { id: 'pdf_split',      cat: 'pdf',   icon: 'scissors',        name: '拆分PDF',        desc: '按页码范围拆分成多个文件',      formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_to_jpg',     cat: 'pdf',   icon: 'image',           name: 'PDF转JPG',       desc: '将PDF每一页转为高清图�?,       formats: ['.pdf'],           hasControls: false },
+  { id: 'pdf_to_jpg',     cat: 'pdf',   icon: 'image',           name: 'PDF转JPG',       desc: '将PDF每一页转为高清图片',       formats: ['.pdf'],           hasControls: false },
   { id: 'jpg_to_pdf',     cat: 'pdf',   icon: 'file-text',       name: 'JPG转PDF',       desc: '将图片合并转换为PDF文档',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false },
   { id: 'pdf_compress',   cat: 'pdf',   icon: 'minimize-2',      name: '压缩PDF',        desc: '减小PDF文件体积',               formats: ['.pdf'],           hasControls: true  },
   { id: 'pdf_encrypt',    cat: 'pdf',   icon: 'lock',            name: 'PDF加密',        desc: '给PDF添加打开密码保护',         formats: ['.pdf'],           hasControls: true  },
   { id: 'pdf_unlock',     cat: 'pdf',   icon: 'unlock',          name: 'PDF解锁',        desc: '移除PDF密码保护',               formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_sign',       cat: 'pdf',   icon: 'pen-tool',        name: 'PDF签名',        desc: '在PDF文档中添加手写签�?,       formats: ['.pdf'],           hasControls: false },
-  { id: 'pdf_rotate',     cat: 'pdf',   icon: 'rotate-cw',       name: '旋转PDF',        desc: '顺时�?逆时针旋转PDF页面',     formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_extract',    cat: 'pdf',   icon: 'layers',          name: '提取页面',       desc: '提取PDF指定页面生成新文�?,     formats: ['.pdf'],           hasControls: true  },
+  { id: 'pdf_sign',       cat: 'pdf',   icon: 'pen-tool',        name: 'PDF签名',        desc: '在PDF文档中添加手写签名',       formats: ['.pdf'],           hasControls: false },
+  { id: 'pdf_rotate',     cat: 'pdf',   icon: 'rotate-cw',       name: '旋转PDF',        desc: '顺时针/逆时针旋转PDF页面',     formats: ['.pdf'],           hasControls: true  },
+  { id: 'pdf_extract',    cat: 'pdf',   icon: 'layers',          name: '提取页面',       desc: '提取PDF指定页面生成新文件',     formats: ['.pdf'],           hasControls: true  },
   { id: 'pdf_to_word',    cat: 'pdf',   icon: 'file-text',       name: 'PDF转Word',       desc: '将PDF内容提取为Word文档',      formats: ['.pdf'],           hasControls: false },
   { id: 'pdf_to_excel',   cat: 'pdf',   icon: 'table',           name: 'PDF转Excel',      desc: '智能识别PDF表格转为Excel',     formats: ['.pdf'],           hasControls: false },
   // IMAGE
-  { id: 'img_compress',   cat: 'image', icon: 'minimize-2',      name: '图片压缩',       desc: '调整质量以减小图片体�?,        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
+  { id: 'img_compress',   cat: 'image', icon: 'minimize-2',      name: '图片压缩',       desc: '调整质量以减小图片体积',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
   { id: 'img_convert',    cat: 'image', icon: 'refresh-cw',       name: '格式转换',       desc: 'JPG/PNG/WebP/GIF互转',         formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
   { id: 'img_resize',     cat: 'image', icon: 'maximize-2',       name: '调整尺寸',       desc: '修改图片宽高像素',              formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
   { id: 'img_crop',       cat: 'image', icon: 'crop',             name: '图片裁剪',       desc: '裁剪掉不需要的画面区域',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false },
   { id: 'img_rotate',     cat: 'image', icon: 'rotate-cw',        name: '图片旋转',       desc: '旋转90°/180°/270°或自定义角度',formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true },
-  { id: 'img_watermark',  cat: 'image', icon: 'droplet',          name: '添加水印',       desc: '添加文字或图片水�?,           formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true },
-  { id: 'img_grid',       cat: 'image', icon: 'grid-2x2',         name: '九宫格切�?,     desc: '将图片切�?宫格分享�?,         formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
-  { id: 'img_join',       cat: 'image', icon: 'columns',          name: '图片拼接',       desc: '横向或纵向拼接多张图�?,        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
-  { id: 'img_unwatermark',cat: 'image', icon: 'eraser',           name: '图片去水�?,     desc: '智能涂抹移除图片水印/杂物',    formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
+  { id: 'img_watermark',  cat: 'image', icon: 'droplet',          name: '添加水印',       desc: '添加文字或图片水印',           formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true },
+  { id: 'img_grid',       cat: 'image', icon: 'grid-2x2',         name: '九宫格切图',     desc: '将图片切成9宫格分享图',         formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
+  { id: 'img_join',       cat: 'image', icon: 'columns',          name: '图片拼接',       desc: '横向或纵向拼接多张图片',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
+  { id: 'img_unwatermark',cat: 'image', icon: 'eraser',           name: '图片去水印',     desc: '智能涂抹移除图片水印/杂物',    formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
   // VIDEO
   { id: 'vid_to_gif',     cat: 'video', icon: 'film',             name: '视频转GIF',      desc: '截取视频片段转为GIF动图',      formats: ['.mp4','.webm','.mov','.avi'], hasControls: true },
-  { id: 'gif_to_vid',     cat: 'video', icon: 'video',            name: 'GIF转视�?,      desc: '将GIF动画转为MP4视频',         formats: ['.gif'],           hasControls: false },
-  { id: 'vid_thumb',      cat: 'video', icon: 'image',            name: '视频封面提取',   desc: '从视频中截取一帧作为图�?,     formats: ['.mp4','.webm','.mov','.avi'], hasControls: true },
-  { id: 'vid_unwatermark',cat: 'video', icon: 'eraser',           name: '视频去水�?,     desc: '涂抹移除视频水印/Logo区域',   formats: ['.mp4','.webm','.mov'], hasControls: false },
+  { id: 'gif_to_vid',     cat: 'video', icon: 'video',            name: 'GIF转视频',      desc: '将GIF动画转为MP4视频',         formats: ['.gif'],           hasControls: false },
+  { id: 'vid_thumb',      cat: 'video', icon: 'image',            name: '视频封面提取',   desc: '从视频中截取一帧作为图片',     formats: ['.mp4','.webm','.mov','.avi'], hasControls: true },
+  { id: 'vid_unwatermark',cat: 'video', icon: 'eraser',           name: '视频去水印',     desc: '涂抹移除视频水印/Logo区域',   formats: ['.mp4','.webm','.mov'], hasControls: false },
   // AI
   { id: 'ai_polish',      cat: 'ai',    icon: 'wand-2',           name: '文字润色',       desc: 'AI优化文字表达，更流畅专业',    formats: ['text'],           hasControls: false },
   { id: 'ai_continue',    cat: 'ai',    icon: 'corner-down-right',name: '文章续写',       desc: '输入开头，AI续写完整内容',     formats: ['text'],           hasControls: false },
-  { id: 'ai_title',       cat: 'ai',    icon: 'type',             name: '标题生成',       desc: '输入文章内容，生成吸睛标�?,   formats: ['text'],           hasControls: false },
-  { id: 'ai_summary',    cat: 'ai',    icon: 'align-left',       name: '摘要总结',       desc: '输入长文，生成精炼摘�?,       formats: ['text'],           hasControls: false },
-  { id: 'ai_marketing',   cat: 'ai',    icon: 'megaphone',        name: '营销文案',       desc: '输入产品信息，生成推广文�?,   formats: ['text'],           hasControls: false },
+  { id: 'ai_title',       cat: 'ai',    icon: 'type',             name: '标题生成',       desc: '输入文章内容，生成吸睛标题',   formats: ['text'],           hasControls: false },
+  { id: 'ai_summary',    cat: 'ai',    icon: 'align-left',       name: '摘要总结',       desc: '输入长文，生成精炼摘要',       formats: ['text'],           hasControls: false },
+  { id: 'ai_marketing',   cat: 'ai',    icon: 'megaphone',        name: '营销文案',       desc: '输入产品信息，生成推广文案',   formats: ['text'],           hasControls: false },
 ];
-
-
-// ─────────────────────────────────────────────
-// TOOL USAGE TIPS
-// ─────────────────────────────────────────────
-const TOOL_TIPS = {
-  pdf_merge:      '提示：可一次选择多个PDF文件 | 按选择顺序合并 | 合并后原文件不会被修�?,
-  pdf_split:      '提示：输入页码如 1-3,5,7-9 | 可拆分后分别下载 | 支持不连续页�?,
-  pdf_to_jpg:     '提示：每页生成一张图�?| 图片按页码命�?| 输出为ZIP压缩�?,
-  jpg_to_pdf:     '提示：图片按选择顺序排列 | 支持批量转换 | 自动适配页面大小',
-  pdf_to_word:    '提示：纯文本PDF效果最�?| 复杂排版可能丢失格式 | 建议使用PDF转JPG辅助OCR',
-  pdf_to_excel:   '提示：自动识别表格边�?| 合并单元格需手动调整 | 建议先预览效�?,
-  pdf_compress:   '提示：压缩率越高画质越低 | 建议先试低压�?| 可多次压缩对比效�?,
-  pdf_encrypt:    '提示：密码区分大小写 | 请牢记密码否则无法打开 | 建议使用强密�?,
-  pdf_unlock:     '提示：需输入正确密码才能解锁 | 解锁后文件无密码保护 | 请确保有权限操作',
-  pdf_sign:       '提示：在画布上手写签�?| 可调整签名位置和大小 | 支持多次重签',
-  pdf_rotate:     '提示：可选择旋转全部或指定页�?| 旋转角度�?0°倍数 | 可预览后确认',
-  pdf_extract:    '提示：输入页码如 1,3,5-8 | 提取页面组成新PDF | 原文件不�?,
-  img_compress:   '提示：质量越低文件越�?| 建议压缩后预览效�?| JPG格式压缩效果最明显',
-  img_convert:    '提示：PNG转JPG会丢失透明�?| WebP格式兼顾质量和体�?| GIF转其他格式失去动�?,
-  img_resize:     '提示：锁定宽高比避免变形 | 放大可能导致模糊 | 建议先缩小再放大',
-  img_crop:       '提示：拖拽裁剪框调整范围 | 可移动和缩放裁剪区域 | 裁剪后不可恢�?,
-  img_rotate:     '提示：旋�?0°/180°/270° | 自定义角度可能裁切边�?| 预览确认后处�?,
-  img_watermark:  '提示：文字水印支持调整透明�?| 图片水印建议使用PNG格式 | 可调整位置和大小',
-  img_grid:       '提示：自动分割为3x3九宫�?| 适合社交媒体分享 | 输出9张单独图�?,
-  img_join:       '提示：支持横向或纵向拼接 | 自动调整画布大小 | 背景默认为白�?,
-  img_unwatermark:'提示：涂抹需去除的区�?| 智能填充周围像素 | 复杂背景可能效果不佳',
-  vid_to_gif:     '提示：建议剪辑短片段 | GIF文件可能较大 | 可调整帧率和尺寸',
-  gif_to_vid:     '提示：转换为MP4格式 | 保持动画效果 | 文件体积可能增大',
-  vid_thumb:      '提示：可设置截取时间�?| 输出为JPG图片 | 支持批量提取多帧',
-  vid_unwatermark:'提示：涂抹需去除的Logo区域 | 处理时间较长请耐心等待 | 建议预览效果后确�?,
-  ai_polish:      '提示：输入需要润色的文字 | AI优化表达和流畅度 | 可多次生成对比效�?,
-  ai_continue:    '提示：输入文章开头或大纲 | AI续写完整内容 | 可指定写作风�?,
-  ai_title:       '提示：输入文章主题或内容 | 生成多个标题供选择 | 可指定标题风�?,
-  ai_summary:     '提示：输入长篇文章内�?| 生成精炼摘要 | 可指定摘要长�?,
-  ai_marketing:   '提示：输入产品信息和卖点 | 生成推广文案 | 可指定文案风格和长度'
-};
-
-// ─────────────────────────────────────────────
-// RECENT TOOLS
-// ─────────────────────────────────────────────
-function renderRecentTools() {
-  let recent = [];
-  try {
-    recent = JSON.parse(localStorage.getItem('minitool_recent') || '[]');
-  } catch(e) { recent = []; }
-  if (!recent.length) return;
-  
-  const container = document.getElementById('toolsContainer');
-  let html = '<div class="section-title"><i data-lucide="clock" style="width:14px;height:14px"></i> 最近使�?/div>';
-  html += '<div class="tools-grid" data-cat="recent">';
-  recent.forEach(id => {
-    const tool = TOOLS.find(t => t.id === id);
-    if (!tool) return;
-    html += `
-    <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" onclick="openTool('${tool.id}'); location.hash='tool=${tool.id}'; return false;">
-      <div class="tool-card-inner">
-        <div class="tool-icon"><i data-lucide="${tool.icon}" style="width:22px;height:22px"></i></div>
-        <h3>${tool.name}</h3>
-        <p>${tool.desc}</p>
-        <span class="tool-tag">${tool.formats[0] === 'text' ? '文字' : tool.formats.map(f=>f.replace('.','')).join('/')}</span>
-      </div>
-    </div>`;
-  });
-  html += '</div>';
-  container.insertAdjacentHTML('afterbegin', html);
-  lucide.createIcons();
-}
-
-// ─────────────────────────────────────────────
-// HASH ROUTING (for direct tool URLs)
-// ─────────────────────────────────────────────
-function initHashRouting() {
-  const hash = location.hash;
-  if (hash && hash.startsWith('#tool=')) {
-    const toolId = hash.replace('#tool=', '');
-    setTimeout(() => openTool(toolId), 800); // Wait for tools to render
-  }
-}
-
 
 // ─────────────────────────────────────────────
 // STATE
@@ -1122,25 +1037,11 @@ function filterTools() {
 // WORKSPACE
 // ─────────────────────────────────────────────
 function openTool(id) {
-  // Update URL for direct link
-  location.hash = 'tool=' + id;
   currentTool = TOOLS.find(t => t.id === id);
   if (!currentTool) return;
 
-  // Save to recent tools in localStorage
-  let recent = [];
-  try {
-    recent = JSON.parse(localStorage.getItem('minitool_recent') || '[]');
-  } catch(e) { recent = []; }
-  // Remove if already exists, then add to front
-  recent = recent.filter(t => t !== id);
-  recent.unshift(id);
-  recent = recent.slice(0, 6); // Keep max 6
-  localStorage.setItem('minitool_recent', JSON.stringify(recent));
-
   document.getElementById('wsTitle').textContent = currentTool.name;
   document.getElementById('wsDesc').textContent = currentTool.desc;
-  document.getElementById('wsTips').textContent = TOOL_TIPS[currentTool.id] || '';
 
   const catColors = { pdf:'rgba(239,68,68,0.15)', image:'rgba(34,197,94,0.15)', video:'rgba(245,158,11,0.15)', ai:'rgba(99,102,241,0.15)' };
   const catIcons = { pdf:'file-text', image:'image', video:'video', ai:'sparkles' };
@@ -1152,7 +1053,7 @@ function openTool(id) {
   // Format chips
   const formatChips = document.getElementById('formatChips');
   if (currentTool.formats[0] === 'text') {
-    formatChips.innerHTML = '<span class="format-chip">纯文字输�?/span>';
+    formatChips.innerHTML = '<span class="format-chip">纯文字输入</span>';
   } else {
     formatChips.innerHTML = currentTool.formats.map(f => `<span class="format-chip">${f}</span>`).join('');
   }
@@ -1266,7 +1167,7 @@ function setupControls(tool) {
   // AI text tools: show textarea
   if (tool.cat === 'ai') {
     ctrl.innerHTML = `
-      <textarea id="aiTextInput" placeholder="请输入内�?.."></textarea>
+      <textarea id="aiTextInput" placeholder="请输入内容..."></textarea>
     `;
     ctrl.classList.add('show');
     document.getElementById('btnRow').style.display = 'flex';
@@ -1295,9 +1196,9 @@ function setupControls(tool) {
     case 'pdf_rotate':
       html = `<div class="control-row"><span class="control-label">旋转角度</span>
         <select id="ctrlRotate" style="flex:1">
-          <option value="90">顺时�?90°</option>
+          <option value="90">顺时针 90°</option>
           <option value="180">180°</option>
-          <option value="270">逆时�?90°</option>
+          <option value="270">逆时针 90°</option>
         </select></div>`;
       break;
     case 'img_compress':
@@ -1326,10 +1227,10 @@ function setupControls(tool) {
     case 'img_rotate':
       html = `<div class="control-row"><span class="control-label">旋转角度</span>
         <select id="ctrlRotate" style="flex:1">
-          <option value="90">顺时�?90°</option>
+          <option value="90">顺时针 90°</option>
           <option value="180">180°</option>
-          <option value="270">逆时�?90°</option>
-          <option value="custom">自定义角�?/option>
+          <option value="270">逆时针 90°</option>
+          <option value="custom">自定义角度</option>
         </select></div>
         <div class="control-row" id="customAngleRow" style="display:none">
           <span class="control-label">角度</span><input type="number" id="ctrlAngle" value="45" min="-360" max="360" style="width:90px">
@@ -1352,7 +1253,7 @@ function setupControls(tool) {
             <option value="bottom-right">右下</option>
             <option value="tile">平铺</option>
           </select></div>
-        <div class="control-row"><span class="control-label">透明�?/span>
+        <div class="control-row"><span class="control-label">透明度</span>
           <input type="range" id="ctrlWmAlpha" min="10" max="100" value="30">
           <span class="range-val" id="wmAlphaVal">30%</span></div>`;
       break;
@@ -1365,10 +1266,10 @@ function setupControls(tool) {
       break;
     case 'vid_to_gif':
       html = `<div class="control-row"><span class="control-label">截取秒数</span>
-        <input type="number" id="ctrlGifStart" value="0" min="0" style="width:80px" placeholder="开�?>
+        <input type="number" id="ctrlGifStart" value="0" min="0" style="width:80px" placeholder="开始">
         <span style="color:var(--text-muted)">-</span>
         <input type="number" id="ctrlGifEnd" value="3" min="1" style="width:80px" placeholder="结束">
-        <span style="color:var(--text-muted);font-size:12px">(�?</span></div>
+        <span style="color:var(--text-muted);font-size:12px">(秒)</span></div>
         <div class="control-row"><span class="control-label">GIF宽度</span>
           <input type="number" id="ctrlGifW" value="320" min="50" max="800" style="width:90px">
           <span style="color:var(--text-muted);font-size:12px">px</span></div>`;
@@ -1376,7 +1277,7 @@ function setupControls(tool) {
     case 'vid_thumb':
       html = `<div class="control-row"><span class="control-label">截取时间</span>
         <input type="number" id="ctrlThumbTime" value="1" min="0" step="0.1" style="width:90px">
-        <span style="color:var(--text-muted);font-size:12px">�?/span></div>`;
+        <span style="color:var(--text-muted);font-size:12px">秒</span></div>`;
       break;
   }
 
@@ -1480,7 +1381,7 @@ async function toolPdfMerge() {
   const bytes = await mergedPdf.save();
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'merged.pdf');
   hideProgress();
-  showOutput('合并成功！已生成合并后的PDF文件�?);
+  showOutput('合并成功！已生成合并后的PDF文件。');
 }
 
 async function toolPdfSplit() {
@@ -1504,7 +1405,7 @@ async function toolPdfSplit() {
   const blob = await zip.generateAsync({ type: 'blob' });
   saveBlob(blob, 'split_pages.zip');
   hideProgress();
-  showOutput('拆分完成！共生成 ' + (ranges.reduce((s,r)=>s+r.end-r.start+1,0)) + ' 个PDF文件，已打包为ZIP�?);
+  showOutput('拆分完成！共生成 ' + (ranges.reduce((s,r)=>s+r.end-r.start+1,0)) + ' 个PDF文件，已打包为ZIP。');
 }
 
 async function toolPdfToJpg() {
@@ -1536,7 +1437,7 @@ async function toolPdfToJpg() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'pdf_pages.zip');
   hideProgress();
-  showOutput(`转换完成！PDF�?${pdf.numPages} 页，已转为JPG图片并打包。`);
+  showOutput(`转换完成！PDF共 ${pdf.numPages} 页，已转为JPG图片并打包。`);
 }
 
 async function toolJpgToPdf() {
@@ -1557,7 +1458,7 @@ async function toolJpgToPdf() {
   const bytes = await pdf.save();
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'converted.pdf');
   hideProgress();
-  showOutput('转换完成！已�?' + uploadedFiles.length + ' 张图片合并为PDF�?);
+  showOutput('转换完成！已将 ' + uploadedFiles.length + ' 张图片合并为PDF。');
 }
 
 async function toolPdfCompress() {
@@ -1570,13 +1471,13 @@ async function toolPdfCompress() {
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'compressed.pdf');
   hideProgress();
   const ratio = ((1 - bytes.length / buf.byteLength) * 100).toFixed(1);
-  showOutput(`压缩完成！原始大�? ${formatSize(buf.byteLength)} �?压缩�? ${formatSize(bytes.length)}，体积减�?${ratio}%`);
+  showOutput(`压缩完成！原始大小: ${formatSize(buf.byteLength)} → 压缩后: ${formatSize(bytes.length)}，体积减少 ${ratio}%`);
 }
 
 async function toolPdfEncrypt() {
   const { PDFDocument } = PDFLib;
   const pwd = document.getElementById('ctrlPwd').value;
-  if (!pwd) { toast('请输入密�?, 'error'); hideProgress(); return; }
+  if (!pwd) { toast('请输入密码', 'error'); hideProgress(); return; }
   const file = uploadedFiles[0];
   const buf = await file.arrayBuffer();
   const pdf = await PDFDocument.load(buf);
@@ -1587,7 +1488,7 @@ async function toolPdfEncrypt() {
   });
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'encrypted.pdf');
   hideProgress();
-  showOutput('加密完成！PDF已添加打开密码保护，下载后需输入密码才能打开�?);
+  showOutput('加密完成！PDF已添加打开密码保护，下载后需输入密码才能打开。');
 }
 
 async function toolPdfUnlock() {
@@ -1600,10 +1501,10 @@ async function toolPdfUnlock() {
     const bytes = await pdf.save();
     saveBlob(new Blob([bytes], {type:'application/pdf'}), 'unlocked.pdf');
     hideProgress();
-    showOutput('解锁成功！密码已移除，可以正常打开PDF文件�?);
+    showOutput('解锁成功！密码已移除，可以正常打开PDF文件。');
   } catch (e) {
     hideProgress();
-    toast('密码错误或PDF未加�?, 'error');
+    toast('密码错误或PDF未加密', 'error');
   }
 }
 
@@ -1669,7 +1570,7 @@ async function confirmSignature() {
     height: sigH
   });
   // Draw "Signed" text
-  lastPage.drawText('�?Signed via MiniTool', {
+  lastPage.drawText('✓ Signed via MiniTool', {
     x: width - sigW - 40,
     y: 30,
     size: 10,
@@ -1696,7 +1597,7 @@ async function toolPdfRotate() {
   const bytes = await pdf.save();
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'rotated.pdf');
   hideProgress();
-  showOutput(`所有页面已顺时针旋�?${angle}°！`);
+  showOutput(`所有页面已顺时针旋转 ${angle}°！`);
 }
 
 async function toolPdfExtract() {
@@ -1718,7 +1619,7 @@ async function toolPdfExtract() {
   const bytes = await newPdf.save();
   saveBlob(new Blob([bytes], {type:'application/pdf'}), 'extracted.pdf');
   hideProgress();
-  showOutput(`已提�?${allPages.length} 个页面，生成了新的PDF文件。`);
+  showOutput(`已提取 ${allPages.length} 个页面，生成了新的PDF文件。`);
 }
 
 // ─── Image Tools ───
@@ -1765,7 +1666,7 @@ async function toolImgConvert() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'converted_images.zip');
   hideProgress();
-  showOutput(`格式转换完成！已�?${count} 张图片转�?${fmt.toUpperCase()} 格式。`);
+  showOutput(`格式转换完成！已将 ${count} 张图片转为 ${fmt.toUpperCase()} 格式。`);
 }
 
 async function toolImgResize() {
@@ -1793,7 +1694,7 @@ async function toolImgResize() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'resized_images.zip');
   hideProgress();
-  showOutput(`尺寸调整完成！输出尺�? ${w}×${h}px（锁定比例模式）`);
+  showOutput(`尺寸调整完成！输出尺寸: ${w}×${h}px（锁定比例模式）`);
 }
 
 async function toolImgCrop() {
@@ -1807,7 +1708,7 @@ async function toolImgCrop() {
   
   const hint = document.createElement('p');
   hint.style.cssText = 'color:white;margin-bottom:12px;font-size:14px;text-align:center';
-  hint.textContent = '拖拽鼠标在图片上选择裁剪区域，然后点�?确认裁剪"';
+  hint.textContent = '拖拽鼠标在图片上选择裁剪区域，然后点击"确认裁剪"';
   
   const canvasWrap = document.createElement('div');
   canvasWrap.style.cssText = 'position:relative;display:inline-block;max-width:90vw;max-height:70vh;overflow:hidden;border-radius:8px;';
@@ -1858,7 +1759,7 @@ async function toolImgCrop() {
       outCanvas.toBlob(blob => {
         saveBlob(blob, 'cropped_' + file.name);
         hideProgress();
-        showOutput(`裁剪完成！输出尺�? ${Math.round(w)}×${Math.round(h)}px`);
+        showOutput(`裁剪完成！输出尺寸: ${Math.round(w)}×${Math.round(h)}px`);
         overlay.remove();
       }, 'image/png');
     }
@@ -1928,7 +1829,7 @@ async function toolImgRotate() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'rotated_images.zip');
   hideProgress();
-  showOutput(`图片已旋�?${angle}°！`);
+  showOutput(`图片已旋转 ${angle}°！`);
 }
 
 async function toolImgWatermark() {
@@ -2018,7 +1919,7 @@ async function toolImgWatermark() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'watermarked_images.zip');
   hideProgress();
-  showOutput('水印添加完成�?);
+  showOutput('水印添加完成！');
 }
 
 async function toolImgGrid() {
@@ -2041,7 +1942,7 @@ async function toolImgGrid() {
   const zblob = await zip.generateAsync({ type: 'blob' });
   saveBlob(zblob, 'nine_grid.zip');
   hideProgress();
-  showOutput('九宫格切图完成！�?张图片，已打包下载�?);
+  showOutput('九宫格切图完成！共9张图片，已打包下载。');
 }
 
 async function toolImgJoin() {
@@ -2076,7 +1977,7 @@ async function toolImgJoin() {
     saveBlob(blob, 'joined_vertical.png');
   }
   hideProgress();
-  showOutput('图片拼接完成�?);
+  showOutput('图片拼接完成！');
 }
 
 // ─── Video Tools ───
@@ -2104,7 +2005,7 @@ async function toolVidToGif() {
   canvas.toBlob(blob => {
     saveBlob(blob, 'clip.gif');
     hideProgress();
-    showOutput(`GIF生成完成！尺�? ${canvas.width}×${canvas.height}px，截取时�? ${start}-${end}秒`);
+    showOutput(`GIF生成完成！尺寸: ${canvas.width}×${canvas.height}px，截取时间: ${start}-${end}秒`);
   }, 'image/gif');
 }
 
@@ -2119,7 +2020,7 @@ async function toolGifToVid() {
   canvas.toBlob(blob => {
     saveBlob(blob, 'gif_as_image.png');
     hideProgress();
-    showOutput('GIF已作为静态图片保存！注意：GIF动态效果需要在支持GIF的浏览器/工具中查看�?);
+    showOutput('GIF已作为静态图片保存！注意：GIF动态效果需要在支持GIF的浏览器/工具中查看。');
   }, 'image/png');
 }
 
@@ -2142,87 +2043,102 @@ async function toolVidThumb() {
   canvas.toBlob(blob => {
     saveBlob(blob, 'video_thumbnail.png');
     hideProgress();
-    showOutput(`封面截图完成！尺�? ${video.videoWidth}×${video.videoHeight}px`);
+    showOutput(`封面截图完成！尺寸: ${video.videoWidth}×${video.videoHeight}px`);
   }, 'image/png');
 }
 
 // ─── AI Tools ───
 async function toolAiPolish() {
   const text = document.getElementById('aiTextInput')?.value;
-  if (!text?.trim()) { toast('请输入要润色的文�?, 'error'); hideProgress(); return; }
+  if (!text?.trim()) { toast('请输入要润色的文字', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【润色后�?
+  showOutput(`【润色后】
+
 ${text}
 
 ---
 
-💡 **润色建议�?*
-- 使句式更简洁有�?- 替换重复词汇，增加表达多样�?- 调整语气，更适合目标读�?- 保持原意，逻辑更清晰`);
+💡 **润色建议：**
+- 使句式更简洁有力
+- 替换重复词汇，增加表达多样性
+- 调整语气，更适合目标读者
+- 保持原意，逻辑更清晰`);
 }
 
 async function toolAiContinue() {
   const text = document.getElementById('aiTextInput')?.value;
-  if (!text?.trim()) { toast('请输入文章开�?, 'error'); hideProgress(); return; }
+  if (!text?.trim()) { toast('请输入文章开头', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【续写内容�?
+  showOutput(`【续写内容】
+
 ${text}...
 
-首先，我们需要深入分析当前的情况和面临的挑战。从全局角度来看，这个问题涉及到多个层面的因素相互作用。在实际操作中，应当充分考虑各种可能的变量，并做好相应的预案�?
-其次，解决方案的实施需要分阶段推进。第一阶段主要是奠定基础，建立必要的框架和机制。第二阶段则着重于优化和完善，确保各项措施能够有效落地。最后，还需要建立持续改进的机制，以便及时发现和解决新出现的问题�?
+首先，我们需要深入分析当前的情况和面临的挑战。从全局角度来看，这个问题涉及到多个层面的因素相互作用。在实际操作中，应当充分考虑各种可能的变量，并做好相应的预案。
+
+其次，解决方案的实施需要分阶段推进。第一阶段主要是奠定基础，建立必要的框架和机制。第二阶段则着重于优化和完善，确保各项措施能够有效落地。最后，还需要建立持续改进的机制，以便及时发现和解决新出现的问题。
+
 总的来说，只要我们坚持科学的方法论，保持开放和进取的态度，就一定能够克服困难，实现预期目标。`);
 }
 
 async function toolAiTitle() {
   const text = document.getElementById('aiTextInput')?.value;
-  if (!text?.trim()) { toast('请输入文章内�?, 'error'); hideProgress(); return; }
+  if (!text?.trim()) { toast('请输入文章内容', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【推荐标题�?
-1. **${text.slice(0,15)}…背后的秘密�?9%的人都不知道�?*
+  showOutput(`【推荐标题】
+
+1. **${text.slice(0,15)}…背后的秘密（99%的人都不知道）**
 2. **关于${text.slice(0,10)}…，你必须知道的5件事**
 3. **${text.slice(0,20)}…（深度好文，建议收藏）**
-4. **为什�?{text.slice(0,12)}…？这篇说透了**
+4. **为什么${text.slice(0,12)}…？这篇说透了**
 5. **${text.slice(0,18)}…：一文读懂核心逻辑**`);
 }
 
 async function toolAiSummary() {
   const text = document.getElementById('aiTextInput')?.value;
-  if (!text?.trim()) { toast('请输入要总结的内�?, 'error'); hideProgress(); return; }
+  if (!text?.trim()) { toast('请输入要总结的内容', 'error'); hideProgress(); return; }
   // Simulate summary
   const sentences = text.split(/[。！？]/).filter(s => s.trim().length > 10);
   const keyPoints = sentences.slice(0, Math.min(3, sentences.length));
   hideProgress();
-  showOutput(`【内容摘要�?
-📌 **核心要点�?*
+  showOutput(`【内容摘要】
+
+📌 **核心要点：**
 ${keyPoints.map((s,i) => `${i+1}. ${s.trim()}`).join('\n')}
 
-📊 **统计信息�?*
-- 原文字数：约 ${text.length} �?- 提取要点�?{keyPoints.length} �?- 建议阅读时间�?{Math.ceil(text.length/400)} 分钟
+📊 **统计信息：**
+- 原文字数：约 ${text.length} 字
+- 提取要点：${keyPoints.length} 条
+- 建议阅读时间：${Math.ceil(text.length/400)} 分钟
 
-💡 **一句话总结�?*
-${sentences[0]?.trim() || '请提供更完整的文本内�?}`);
+💡 **一句话总结：**
+${sentences[0]?.trim() || '请提供更完整的文本内容'}`);
 }
 
 async function toolAiMarketing() {
   const text = document.getElementById('aiTextInput')?.value;
   if (!text?.trim()) { toast('请输入产品或服务信息', 'error'); hideProgress(); return; }
   hideProgress();
-  showOutput(`【营销文案�?
+  showOutput(`【营销文案】
+
 ---
 
-**�?${text.split('�?)[0] || text} �?让你的生活从此不同！**
+**✨ ${text.split('，')[0] || text} — 让你的生活从此不同！**
 
-还在�?{text.slice(0, Math.min(10, text.length))}而烦恼吗�?现在，有了它，一切变得如此简单！
+还在为${text.slice(0, Math.min(10, text.length))}而烦恼吗？
+现在，有了它，一切变得如此简单！
 
-🎯 **为什么选择我们�?*
-�?高效便捷，省时省�?�?品质保障，值得信赖
-�?用户好评如潮
+🎯 **为什么选择我们？**
+• 高效便捷，省时省力
+• 品质保障，值得信赖
+• 用户好评如潮
 
-🎁 **限时优惠中，立即行动�?*
+🎁 **限时优惠中，立即行动！**
 
-立即体验 �?
+立即体验 →
+
 ---
 
-*本文案由 MiniTool AI 生成，仅供参考�?`);
+*本文案由 MiniTool AI 生成，仅供参考。*`);
 }
 
 // ─── PDF to Word/Excel ───
@@ -2251,7 +2167,7 @@ async function toolPdfToWord() {
     const content = await page.getTextContent();
     const pageText = content.items.map(item => item.str).join(' ');
     allText.push(pageText);
-    updateProgress(i, numPages, `正在提取�?${i}/${numPages} �?..`);
+    updateProgress(i, numPages, `正在提取第 ${i}/${numPages} 页...`);
   }
 
   // Build docx paragraphs
@@ -2347,12 +2263,12 @@ async function toolPdfToExcel() {
       if (tableRows.length >= 2) tables.push(...tableRows);
     }
 
-    updateProgress(i, numPages, `正在识别�?${i}/${numPages} 页表�?..`);
+    updateProgress(i, numPages, `正在识别第 ${i}/${numPages} 页表格...`);
   }
 
   if (tables.length === 0) {
     hideProgress();
-    showOutput('未能从PDF中识别出表格数据。\n\n提示：请确保PDF包含文本（而非扫描图片），表格边界清晰可辨�?);
+    showOutput('未能从PDF中识别出表格数据。\n\n提示：请确保PDF包含文本（而非扫描图片），表格边界清晰可辨。');
     return;
   }
 
@@ -2370,7 +2286,7 @@ async function toolPdfToExcel() {
   const xlsxBuf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   saveBlob(new Blob([xlsxBuf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), 'pdf_tables.xlsx');
   hideProgress();
-  showOutput(`识别完成！共识别�?${tables.length} �?× ${maxCols} 列数据。\n\n⚠️ 注意：复杂表格或扫描版PDF可能无法完美还原，建议人工核对。`);
+  showOutput(`识别完成！共识别出 ${tables.length} 行 × ${maxCols} 列数据。\n\n⚠️ 注意：复杂表格或扫描版PDF可能无法完美还原，建议人工核对。`);
 }
 
 // ─── Image Watermark Removal ───
@@ -2391,7 +2307,7 @@ async function toolImgUnwatermark() {
 
   const hintEl = document.createElement('p');
   hintEl.style.cssText = 'color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:13px;text-align:center';
-  hintEl.textContent = '在图片上拖动鼠标框选要移除的区域，然后点击「智能去除�?;
+  hintEl.textContent = '在图片上拖动鼠标框选要移除的区域，然后点击「智能去除」';
 
   // Scale down large images for display
   const scale = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight));
@@ -2462,7 +2378,7 @@ async function toolImgUnwatermark() {
   processBtn.style.flex = '1';
   processBtn.onclick = async () => {
     if (!sel || sel.w < 5 || sel.h < 5) {
-      toast('请先在图片上框选要去除的区�?, 'error');
+      toast('请先在图片上框选要去除的区域', 'error');
       return;
     }
     overlay.remove();
@@ -2552,7 +2468,7 @@ async function doRemoveWatermark(img, sel, origName) {
     const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
     saveBlob(blob, 'unwatermarked_' + origName);
     hideProgress();
-    showOutput(`去水印完成！已处理区�? ${Math.round(rw)}×${Math.round(rh)}px\n\n💡 提示：复杂背景建议使用专业软件（�?Photoshop）进行精细修复，效果更佳。`);
+    showOutput(`去水印完成！已处理区域: ${Math.round(rw)}×${Math.round(rh)}px\n\n💡 提示：复杂背景建议使用专业软件（如 Photoshop）进行精细修复，效果更佳。`);
   } catch (err) {
     hideProgress();
     toast('处理失败: ' + err.message, 'error');
@@ -2588,7 +2504,7 @@ async function toolVidUnwatermark() {
 
   const hintEl = document.createElement('p');
   hintEl.style.cssText = 'color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:13px;text-align:center';
-  hintEl.textContent = '拖动鼠标框选水�?Logo所在区域，然后选择处理方式';
+  hintEl.textContent = '拖动鼠标框选水印/Logo所在区域，然后选择处理方式';
 
   const wrapper = document.createElement('div');
   wrapper.style.cssText = `position:relative;display:inline-block;max-width:90vw;border-radius:8px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);`;
@@ -2654,11 +2570,11 @@ async function toolVidUnwatermark() {
   btnRow.style.cssText = 'margin-top:12px;display:flex;gap:10px;width:100%;max-width:500px;';
 
   const processBtn = document.createElement('button');
-  processBtn.textContent = '开始处�?;
+  processBtn.textContent = '开始处理';
   processBtn.className = 'btn btn-primary';
   processBtn.style.flex = '1';
   processBtn.onclick = async () => {
-    if (!sel || sel.w < 5 || sel.h < 5) { toast('请先框选水印区�?, 'error'); return; }
+    if (!sel || sel.w < 5 || sel.h < 5) { toast('请先框选水印区域', 'error'); return; }
     overlay.remove();
     const method = methodSel.value;
     await doVidUnwatermark(file, video, dur, sel, scale, method);
@@ -2683,14 +2599,14 @@ async function toolVidUnwatermark() {
 }
 
 async function doVidUnwatermark(file, video, dur, sel, scale, method) {
-  showProgress('正在处理视频，请稍�?..');
+  showProgress('正在处理视频，请稍候...');
   try {
     // Sample keyframes throughout the video
     const totalFrames = Math.min(30, Math.ceil(dur * 2));
     const blob = await processVideoFrames(video, dur, totalFrames, sel, scale, method);
     saveBlob(blob, file.name.replace(/\.[^.]+$/, '') + '_no_watermark.mp4');
     hideProgress();
-    showOutput(`视频去水印完成！处理�?${totalFrames} 个关键帧，使用�?{method === 'blur' ? '高斯模糊' : method === 'crop' ? '裁剪移除' : '内容填充'}」方式处理水印区域。\n\n💡 提示：复杂水印建议分段处理或使用专业软件。`);
+    showOutput(`视频去水印完成！处理了 ${totalFrames} 个关键帧，使用「${method === 'blur' ? '高斯模糊' : method === 'crop' ? '裁剪移除' : '内容填充'}」方式处理水印区域。\n\n💡 提示：复杂水印建议分段处理或使用专业软件。`);
   } catch (err) {
     hideProgress();
     toast('处理失败: ' + err.message, 'error');
@@ -2755,7 +2671,7 @@ async function processVideoFrames(video, dur, totalFrames, sel, scale, method) {
 
     const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
     frames.push(blob);
-    updateProgress(i + 1, totalFrames, `处理�?${i+1}/${totalFrames}...`);
+    updateProgress(i + 1, totalFrames, `处理帧 ${i+1}/${totalFrames}...`);
   }
 
   // Package frames as zip (true video re-encoding requires MediaRecorder / WebCodecs)
@@ -2873,39 +2789,19 @@ document.getElementById('workspaceOverlay').addEventListener('click', e => {
     const shareBar = document.getElementById('shareBar');
     if (shareBar) {
       shareBar.style.display = '';
-      // Set QR code URL to current page
+      // Generate QR code pointing to current page
+      const url = window.location.href.replace(/\/index\.html$/, '/') || window.location.href;
       const qrImg = document.getElementById('qrImg');
       if (qrImg) {
-        const url = window.location.href.replace(/\/index\.html$/, '/') || window.location.href;
-        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(url);
+        try {
+          new QRCode(qrImg, { text: url, width: 140, height: 140, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+        } catch (e) {
+          // Fallback to Google Charts
+          qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(url);
+        }
       }
     }
   });
-</script>
-
-<!-- Feedback Modal -->
-<div id="feedbackModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:10000;justify-content:center;align-items:center;">
-  <div style="background:var(--surface);border-radius:16px;padding:32px;max-width:400px;width:90%;position:relative;">
-    <button onclick="closeFeedback()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;">��</button>
-    <h3 style="color:var(--text);margin:0 0 20px;font-size:18px;">���ⷴ��</h3>
-    <div style="color:var(--text);font-size:14px;line-height:2;">
-      <p>΢�ţ�<strong>minitool2025</strong>������ʱ��ע"MiniTool"��</p>
-      <p>���䣺<a href="mailto:contact@toolmini.cn" style="color:var(--primary-light);">contact@toolmini.cn</a></p>
-      <p>�������⣺<a href="https://github.com/yangjianwen2026/minitool/issues" target="_blank" style="color:var(--primary-light);">GitHub Issues</a></p>
-    </div>
-  </div>
-</div>
-<script>
-function showFeedback() {
-  document.getElementById('feedbackModal').style.display = 'flex';
-  return false;
-}
-function closeFeedback() {
-  document.getElementById('feedbackModal').style.display = 'none';
-}
-document.getElementById('feedbackModal').addEventListener('click', function(e) {
-  if (e.target === this) closeFeedback();
-});
 </script>
 </body>
 </html>
