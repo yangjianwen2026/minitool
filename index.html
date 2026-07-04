@@ -321,13 +321,33 @@ body {
   color: var(--text-muted);
   line-height: 1.5;
 }
+.tool-guide {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(45,45,74,0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .tool-tag {
   display: inline-block;
   font-size: 10px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 6px;
-  margin-top: 10px;
+}
+.tool-link {
+  font-size: 12px;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.tool-link:hover {
+  opacity: 1;
 }
 
 /* Tool category colors */
@@ -768,6 +788,106 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .sig-actions { display: flex; gap: 8px; margin-top: 8px; }
 
+/* Recent Tools */
+.recent-tool-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.recent-tool-chip:hover {
+  border-color: var(--primary);
+  background: var(--surface2);
+}
+.recent-tool-chip .rtc-icon {
+  font-size: 14px;
+}
+.recent-tool-chip .rtc-remove {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.recent-tool-chip:hover .rtc-remove {
+  opacity: 1;
+}
+
+/* Feedback Modal */
+.feedback-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+}
+.feedback-overlay.open { display: flex; }
+.feedback-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 480px;
+  padding: 28px;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.feedback-box h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.feedback-box label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+.feedback-box input, .feedback-box textarea, .feedback-box select {
+  width: 100%;
+  margin-bottom: 14px;
+}
+.feedback-contact {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.feedback-contact-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+.feedback-contact-item .fc-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.feedback-contact-item .fc-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .header-inner { padding: 0; gap: 10px; }
@@ -791,7 +911,8 @@ input[type="range"]::-webkit-slider-thumb {
     </a>
     <div class="header-search">
       <i data-lucide="search" class="search-icon" style="width:16px;height:16px"></i>
-      <input type="text" placeholder="搜索工具..." id="searchInput" oninput="filterTools()">
+      <input type="text" placeholder="搜索工具（输入关键词实时过滤）..." id="searchInput" oninput="filterTools()">
+      <button id="searchClear" onclick="document.getElementById('searchInput').value='';filterTools()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;display:none">✕</button>
     </div>
     <div class="header-badge">
       <i data-lucide="shield-check" style="width:14px;height:14px;color:var(--success)"></i>
@@ -844,6 +965,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 <!-- MAIN CONTENT -->
 <main class="main-content" id="mainContent">
+  <!-- 最近使用工具 -->
+  <div id="recentTools" style="display:none;margin-bottom:24px">
+    <div class="section-title"><i data-lucide="clock" style="width:14px;height:14px"></i> 最近使用</div>
+    <div id="recentToolsList" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none"></div>
+  </div>
   <div id="toolsContainer"></div>
 </main>
 
@@ -920,10 +1046,54 @@ input[type="range"]::-webkit-slider-thumb {
 <!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- FEEDBACK MODAL -->
+<div class="feedback-overlay" id="feedbackOverlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="feedback-box">
+    <h2><i data-lucide="message-circle" style="width:20px;height:20px;color:var(--primary-light)"></i> 问题反馈</h2>
+    <form id="feedbackForm" onsubmit="submitFeedback(event)">
+      <label for="fbType">反馈类型</label>
+      <select id="fbType" required>
+        <option value="bug">Bug 反馈</option>
+        <option value="feature">功能建议</option>
+        <option value="other">其他</option>
+      </select>
+      <label for="fbEmail">联系邮箱（可选）</label>
+      <input type="email" id="fbEmail" placeholder="your@email.com">
+      <label for="fbContent">反馈内容</label>
+      <textarea id="fbContent" rows="4" required placeholder="请详细描述您遇到的问题或建议..."></textarea>
+      <div style="display:flex;gap:10px">
+        <button type="submit" class="btn btn-primary" style="flex:1">
+          <i data-lucide="send" style="width:14px;height:14px"></i> 提交反馈
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeFeedback()">取消</button>
+      </div>
+    </form>
+    <div class="feedback-contact">
+      <div class="feedback-contact-item">
+        <i data-lucide="mail" style="width:18px;height:18px;color:var(--primary-light)"></i>
+        <div class="fc-value">support@toolmini.cn</div>
+        <div class="fc-label">邮箱反馈</div>
+      </div>
+      <div class="feedback-contact-item">
+        <i data-lucide="message-circle" style="width:18px;height:18px;color:var(--success)"></i>
+        <div class="fc-value">ToolMini</div>
+        <div class="fc-label">微信公众号</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
-  <p>MiniTool · 纯浏览器端处理 · 所有文件均在本地处理，不会上传到任何服务器</p>
-  <p style="margin-top:6px">© 2025 MiniTool · 仅供学习交流使用</p>
+  <div style="max-width:800px;margin:0 auto">
+    <p style="margin-bottom:8px">MiniTool · 纯浏览器端处理 · 所有文件均在本地处理，不会上传到任何服务器</p>
+    <p style="margin-bottom:10px">© 2025 MiniTool. All rights reserved.</p>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+      <a href="/privacy.html" style="color:var(--primary-light);text-decoration:none;font-size:12px">隐私政策</a>
+      <a href="/terms.html" style="color:var(--primary-light);text-decoration:none;font-size:12px">使用条款</a>
+      <a href="javascript:void(0)" onclick="openFeedback()" style="color:var(--primary-light);text-decoration:none;font-size:12px;cursor:pointer">问题反馈</a>
+    </div>
+  </div>
 <!-- 分享二维码区域 -->
 <div id="shareBar" style="display:none;text-align:center;padding:32px 20px 16px;border-top:1px solid var(--border);margin-top:40px;">
   <h3 style="color:var(--text);font-size:15px;margin:0 0 4px;font-weight:700;">📱 微信扫码使用</h3>
@@ -933,8 +1103,7 @@ input[type="range"]::-webkit-slider-thumb {
   </div>
   <p style="color:var(--text-dim);font-size:12px;margin:12px 0 0;">点击右上角 ··· 添加到我的小程序</p>
 </div>
-
-<footer>
+</footer>
 
 <script>
 // ─────────────────────────────────────────────
@@ -942,39 +1111,39 @@ input[type="range"]::-webkit-slider-thumb {
 // ─────────────────────────────────────────────
 const TOOLS = [
   // PDF
-  { id: 'pdf_merge',      cat: 'pdf',   icon: 'file-plus',      name: '合并PDF',        desc: '将多个PDF合并为一个文件',        formats: ['.pdf'],           hasControls: false },
-  { id: 'pdf_split',      cat: 'pdf',   icon: 'scissors',        name: '拆分PDF',        desc: '按页码范围拆分成多个文件',      formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_to_jpg',     cat: 'pdf',   icon: 'image',           name: 'PDF转JPG',       desc: '将PDF每一页转为高清图片',       formats: ['.pdf'],           hasControls: false },
-  { id: 'jpg_to_pdf',     cat: 'pdf',   icon: 'file-text',       name: 'JPG转PDF',       desc: '将图片合并转换为PDF文档',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false },
-  { id: 'pdf_compress',   cat: 'pdf',   icon: 'minimize-2',      name: '压缩PDF',        desc: '减小PDF文件体积',               formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_encrypt',    cat: 'pdf',   icon: 'lock',            name: 'PDF加密',        desc: '给PDF添加打开密码保护',         formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_unlock',     cat: 'pdf',   icon: 'unlock',          name: 'PDF解锁',        desc: '移除PDF密码保护',               formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_sign',       cat: 'pdf',   icon: 'pen-tool',        name: 'PDF签名',        desc: '在PDF文档中添加手写签名',       formats: ['.pdf'],           hasControls: false },
-  { id: 'pdf_rotate',     cat: 'pdf',   icon: 'rotate-cw',       name: '旋转PDF',        desc: '顺时针/逆时针旋转PDF页面',     formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_extract',    cat: 'pdf',   icon: 'layers',          name: '提取页面',       desc: '提取PDF指定页面生成新文件',     formats: ['.pdf'],           hasControls: true  },
-  { id: 'pdf_to_word',    cat: 'pdf',   icon: 'file-text',       name: 'PDF转Word',       desc: '将PDF内容提取为Word文档',      formats: ['.pdf'],           hasControls: false },
-  { id: 'pdf_to_excel',   cat: 'pdf',   icon: 'table',           name: 'PDF转Excel',      desc: '智能识别PDF表格转为Excel',     formats: ['.pdf'],           hasControls: false },
+  { id: 'pdf_merge',      cat: 'pdf',   icon: 'file-plus',      name: '合并PDF',        desc: '将多个PDF合并为一个文件',        formats: ['.pdf'],           hasControls: false, guide: '1. 上传多个PDF文件（支持拖拽）\n2. 文件将按上传顺序合并\n3. 点击"开始处理"即可下载合并后的文件', slug: 'pdf-merge' },
+  { id: 'pdf_split',      cat: 'pdf',   icon: 'scissors',        name: '拆分PDF',        desc: '按页码范围拆分成多个文件',      formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 输入页码范围，如 1-3,5,7-10\n3. 每页将拆分为独立的PDF文件，打包为ZIP下载', slug: 'pdf-split' },
+  { id: 'pdf_to_jpg',     cat: 'pdf',   icon: 'image',           name: 'PDF转JPG',       desc: '将PDF每一页转为高清图片',       formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 自动将每页转为高清JPG图片\n3. 所有图片打包为ZIP下载', slug: 'pdf-to-jpg' },
+  { id: 'jpg_to_pdf',     cat: 'pdf',   icon: 'file-text',       name: 'JPG转PDF',       desc: '将图片合并转换为PDF文档',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false, guide: '1. 上传多张图片（JPG/PNG/WebP/GIF）\n2. 图片按上传顺序合并\n3. 自动生成PDF文档下载', slug: 'jpg-to-pdf' },
+  { id: 'pdf_compress',   cat: 'pdf',   icon: 'minimize-2',      name: '压缩PDF',        desc: '减小PDF文件体积',               formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 调整压缩质量（越低体积越小）\n3. 处理后下载压缩版PDF', slug: 'pdf-compress' },
+  { id: 'pdf_encrypt',    cat: 'pdf',   icon: 'lock',            name: 'PDF加密',        desc: '给PDF添加打开密码保护',         formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 设置打开密码\n3. 加密后的PDF需输入密码才能打开', slug: 'pdf-encrypt' },
+  { id: 'pdf_unlock',     cat: 'pdf',   icon: 'unlock',          name: 'PDF解锁',        desc: '移除PDF密码保护',               formats: ['.pdf'],           hasControls: true, guide: '1. 上传已加密的PDF文件\n2. 输入当前密码\n3. 解密后可无密码打开PDF', slug: 'pdf-unlock' },
+  { id: 'pdf_sign',       cat: 'pdf',   icon: 'pen-tool',        name: 'PDF签名',        desc: '在PDF文档中添加手写签名',       formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 在签名区域手写签名\n3. 确认后签名将添加到PDF', slug: 'pdf-sign' },
+  { id: 'pdf_rotate',     cat: 'pdf',   icon: 'rotate-cw',       name: '旋转PDF',        desc: '顺时针/逆时针旋转PDF页面',     formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 选择旋转角度（90°/180°/270°）\n3. 所有页面将按指定角度旋转', slug: 'pdf-rotate' },
+  { id: 'pdf_extract',    cat: 'pdf',   icon: 'layers',          name: '提取页面',       desc: '提取PDF指定页面生成新文件',     formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 输入要提取的页码范围\n3. 提取的页面生成新PDF下载', slug: 'pdf-extract' },
+  { id: 'pdf_to_word',    cat: 'pdf',   icon: 'file-text',       name: 'PDF转Word',       desc: '将PDF内容提取为Word文档',      formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 自动提取PDF中的文本内容\n3. 生成Word文档下载（注意：图片和复杂排版无法保留）', slug: 'pdf-to-word' },
+  { id: 'pdf_to_excel',   cat: 'pdf',   icon: 'table',           name: 'PDF转Excel',      desc: '智能识别PDF表格转为Excel',     formats: ['.pdf'],           hasControls: false, guide: '1. 上传包含表格的PDF文件\n2. 智能识别表格结构\n3. 生成Excel文件下载（扫描版PDF可能无法识别）', slug: 'pdf-to-excel' },
   // IMAGE
-  { id: 'img_compress',   cat: 'image', icon: 'minimize-2',      name: '图片压缩',       desc: '调整质量以减小图片体积',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
-  { id: 'img_convert',    cat: 'image', icon: 'refresh-cw',       name: '格式转换',       desc: 'JPG/PNG/WebP/GIF互转',         formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
-  { id: 'img_resize',     cat: 'image', icon: 'maximize-2',       name: '调整尺寸',       desc: '修改图片宽高像素',              formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
-  { id: 'img_crop',       cat: 'image', icon: 'crop',             name: '图片裁剪',       desc: '裁剪掉不需要的画面区域',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false },
-  { id: 'img_rotate',     cat: 'image', icon: 'rotate-cw',        name: '图片旋转',       desc: '旋转90°/180°/270°或自定义角度',formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true },
-  { id: 'img_watermark',  cat: 'image', icon: 'droplet',          name: '添加水印',       desc: '添加文字或图片水印',           formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true },
-  { id: 'img_grid',       cat: 'image', icon: 'grid-2x2',         name: '九宫格切图',     desc: '将图片切成9宫格分享图',         formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
-  { id: 'img_join',       cat: 'image', icon: 'columns',          name: '图片拼接',       desc: '横向或纵向拼接多张图片',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true },
-  { id: 'img_unwatermark',cat: 'image', icon: 'eraser',           name: '图片去水印',     desc: '智能涂抹移除图片水印/杂物',    formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false },
+  { id: 'img_compress',   cat: 'image', icon: 'minimize-2',      name: '图片压缩',       desc: '调整质量以减小图片体积',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片（JPG/PNG/WebP/GIF）\n2. 拖动质量滑块调整压缩率\n3. 压缩后图片自动下载', slug: 'img-compress' },
+  { id: 'img_convert',    cat: 'image', icon: 'refresh-cw',       name: '格式转换',       desc: 'JPG/PNG/WebP/GIF互转',         formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片\n2. 选择目标格式（JPG/PNG/WebP）\n3. 转换后的图片自动下载', slug: 'img-convert' },
+  { id: 'img_resize',     cat: 'image', icon: 'maximize-2',       name: '调整尺寸',       desc: '修改图片宽高像素',              formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片\n2. 输入目标宽高（可锁定比例）\n3. 调整尺寸后的图片自动下载', slug: 'img-resize' },
+  { id: 'img_crop',       cat: 'image', icon: 'crop',             name: '图片裁剪',       desc: '裁剪掉不需要的画面区域',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false, guide: '1. 上传图片\n2. 在图片上拖拽选择裁剪区域\n3. 确认后裁剪图片自动下载', slug: 'img-crop' },
+  { id: 'img_rotate',     cat: 'image', icon: 'rotate-cw',        name: '图片旋转',       desc: '旋转90°/180°/270°或自定义角度',formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true, guide: '1. 上传图片\n2. 选择旋转角度（90°/180°/270°/自定义）\n3. 旋转后的图片自动下载', slug: 'img-rotate' },
+  { id: 'img_watermark',  cat: 'image', icon: 'droplet',          name: '添加水印',       desc: '添加文字或图片水印',           formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true, guide: '1. 上传图片\n2. 选择水印类型（文字/图片）、位置和透明度\n3. 添加水印后的图片自动下载', slug: 'img-watermark' },
+  { id: 'img_grid',       cat: 'image', icon: 'grid-2x2',         name: '九宫格切图',     desc: '将图片切成9宫格分享图',         formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false, guide: '1. 上传一张图片\n2. 自动将图片切为3×3共9张\n3. 九宫格图片打包为ZIP下载', slug: 'img-grid' },
+  { id: 'img_join',       cat: 'image', icon: 'columns',          name: '图片拼接',       desc: '横向或纵向拼接多张图片',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传多张图片\n2. 选择横向或纵向拼接\n3. 拼接后的长图自动下载', slug: 'img-join' },
+  { id: 'img_unwatermark',cat: 'image', icon: 'eraser',           name: '图片去水印',     desc: '智能涂抹移除图片水印/杂物',    formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false, guide: '1. 上传图片\n2. 在图片上框选水印区域\n3. 智能填充移除水印（复杂背景建议使用专业软件）', slug: 'img-unwatermark' },
   // VIDEO
-  { id: 'vid_to_gif',     cat: 'video', icon: 'film',             name: '视频转GIF',      desc: '截取视频片段转为GIF动图',      formats: ['.mp4','.webm','.mov','.avi'], hasControls: true },
-  { id: 'gif_to_vid',     cat: 'video', icon: 'video',            name: 'GIF转视频',      desc: '将GIF动画转为MP4视频',         formats: ['.gif'],           hasControls: false },
-  { id: 'vid_thumb',      cat: 'video', icon: 'image',            name: '视频封面提取',   desc: '从视频中截取一帧作为图片',     formats: ['.mp4','.webm','.mov','.avi'], hasControls: true },
-  { id: 'vid_unwatermark',cat: 'video', icon: 'eraser',           name: '视频去水印',     desc: '涂抹移除视频水印/Logo区域',   formats: ['.mp4','.webm','.mov'], hasControls: false },
+  { id: 'vid_to_gif',     cat: 'video', icon: 'film',             name: '视频转GIF',      desc: '截取视频片段转为GIF动图',      formats: ['.mp4','.webm','.mov','.avi'], hasControls: true, guide: '1. 上传视频文件（MP4/WebM/MOV/AVI）\n2. 设置截取时间范围和GIF宽度\n3. 生成GIF动图下载', slug: 'vid-to-gif' },
+  { id: 'gif_to_vid',     cat: 'video', icon: 'video',            name: 'GIF转视频',      desc: '将GIF动画转为MP4视频',         formats: ['.gif'],           hasControls: false, guide: '1. 上传GIF文件\n2. 自动提取GIF帧\n3. 处理后的文件自动下载', slug: 'gif-to-vid' },
+  { id: 'vid_thumb',      cat: 'video', icon: 'image',            name: '视频封面提取',   desc: '从视频中截取一帧作为图片',     formats: ['.mp4','.webm','.mov','.avi'], hasControls: true, guide: '1. 上传视频文件\n2. 设置截取时间点（秒）\n3. 提取该帧作为封面图片下载', slug: 'vid-thumb' },
+  { id: 'vid_unwatermark',cat: 'video', icon: 'eraser',           name: '视频去水印',     desc: '涂抹移除视频水印/Logo区域',   formats: ['.mp4','.webm','.mov'], hasControls: false, guide: '1. 上传视频文件\n2. 在预览帧上框选水印区域\n3. 选择处理方式（模糊/裁剪/填充）后下载', slug: 'vid-unwatermark' },
   // AI
-  { id: 'ai_polish',      cat: 'ai',    icon: 'wand-2',           name: '文字润色',       desc: 'AI优化文字表达，更流畅专业',    formats: ['text'],           hasControls: false },
-  { id: 'ai_continue',    cat: 'ai',    icon: 'corner-down-right',name: '文章续写',       desc: '输入开头，AI续写完整内容',     formats: ['text'],           hasControls: false },
-  { id: 'ai_title',       cat: 'ai',    icon: 'type',             name: '标题生成',       desc: '输入文章内容，生成吸睛标题',   formats: ['text'],           hasControls: false },
-  { id: 'ai_summary',    cat: 'ai',    icon: 'align-left',       name: '摘要总结',       desc: '输入长文，生成精炼摘要',       formats: ['text'],           hasControls: false },
-  { id: 'ai_marketing',   cat: 'ai',    icon: 'megaphone',        name: '营销文案',       desc: '输入产品信息，生成推广文案',   formats: ['text'],           hasControls: false },
+  { id: 'ai_polish',      cat: 'ai',    icon: 'wand-2',           name: '文字润色',       desc: 'AI优化文字表达，更流畅专业',    formats: ['text'],           hasControls: false, guide: '1. 在文本框中输入需要润色的文字\n2. AI将优化文字表达，使其更流畅专业\n3. 润色后的文字可直接复制使用', slug: 'ai-polish' },
+  { id: 'ai_continue',    cat: 'ai',    icon: 'corner-down-right',name: '文章续写',       desc: '输入开头，AI续写完整内容',     formats: ['text'],           hasControls: false, guide: '1. 输入文章开头或前文\n2. AI将根据上下文续写后续内容\n3. 续写结果可直接复制或继续编辑', slug: 'ai-continue' },
+  { id: 'ai_title',       cat: 'ai',    icon: 'type',             name: '标题生成',       desc: '输入文章内容，生成吸睛标题',   formats: ['text'],           hasControls: false, guide: '1. 输入文章内容\n2. AI将生成多个吸睛标题供选择\n3. 选择合适的标题复制使用', slug: 'ai-title' },
+  { id: 'ai_summary',    cat: 'ai',    icon: 'align-left',       name: '摘要总结',       desc: '输入长文，生成精炼摘要',       formats: ['text'],           hasControls: false, guide: '1. 粘贴需要总结的长文\n2. AI将提取核心要点生成精炼摘要\n3. 摘要可直接复制使用', slug: 'ai-summary' },
+  { id: 'ai_marketing',   cat: 'ai',    icon: 'megaphone',        name: '营销文案',       desc: '输入产品信息，生成推广文案',   formats: ['text'],           hasControls: false, guide: '1. 输入产品名称和特点信息\n2. AI将生成多种风格的推广文案\n3. 选择满意的文案复制使用', slug: 'ai-marketing' },
 ];
 
 // ─────────────────────────────────────────────
@@ -1003,12 +1172,16 @@ function renderTools(category = 'all') {
     html += `<div class="tools-grid" data-cat="${cat}">`;
     catTools.forEach(tool => {
       html += `
-      <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" onclick="openTool('${tool.id}')">
+      <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" data-name="${tool.name}" onclick="openTool('${tool.id}')">
         <div class="tool-card-inner">
           <div class="tool-icon"><i data-lucide="${tool.icon}" style="width:22px;height:22px"></i></div>
           <h3>${tool.name}</h3>
           <p>${tool.desc}</p>
-          <span class="tool-tag">${tool.formats[0] === 'text' ? '文字' : tool.formats.map(f=>f.replace('.','')).join('/')}</span>
+          ${tool.guide ? '<p class="tool-guide">' + tool.guide.replace(/\n/g, '<br>') + '</p>' : ''}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            <span class="tool-tag">${tool.formats[0] === 'text' ? '文字' : tool.formats.map(f=>f.replace('.','')).join('/')}</span>
+            <a href="${tool.slug ? '/tools/' + tool.slug + '.html' : '#'}" class="tool-link" onclick="event.stopPropagation()" title="独立页面打开">🔗</a>
+          </div>
         </div>
       </div>`;
     });
@@ -1024,14 +1197,7 @@ function switchTab(cat) {
   renderTools(cat);
 }
 
-function filterTools() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  document.querySelectorAll('.tool-card').forEach(card => {
-    const name = card.querySelector('h3').textContent.toLowerCase();
-    const desc = card.querySelector('p').textContent.toLowerCase();
-    card.style.display = (name.includes(q) || desc.includes(q)) ? '' : 'none';
-  });
-}
+
 
 // ─────────────────────────────────────────────
 // WORKSPACE
@@ -2771,6 +2937,127 @@ document.getElementById('workspaceOverlay').addEventListener('click', e => {
   if (e.target === document.getElementById('workspaceOverlay')) closeWorkspace();
 });
 </script>
+
+
+// ─────────────────────────────────────────────
+// RECENT TOOLS (LocalStorage)
+// ─────────────────────────────────────────────
+function getRecentTools() {
+  try {
+    const data = localStorage.getItem('minitool_recent');
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+}
+
+function addRecentTool(toolId) {
+  let recent = getRecentTools();
+  recent = recent.filter(id => id !== toolId);
+  recent.unshift(toolId);
+  if (recent.length > 8) recent = recent.slice(0, 8);
+  try { localStorage.setItem('minitool_recent', JSON.stringify(recent)); } catch {}
+  renderRecentTools();
+}
+
+function removeRecentTool(toolId, e) {
+  if (e) e.stopPropagation();
+  let recent = getRecentTools();
+  recent = recent.filter(id => id !== toolId);
+  try { localStorage.setItem('minitool_recent', JSON.stringify(recent)); } catch {}
+  renderRecentTools();
+}
+
+function renderRecentTools() {
+  const recent = getRecentTools();
+  const container = document.getElementById('recentTools');
+  const list = document.getElementById('recentToolsList');
+  if (!container || !list) return;
+
+  if (recent.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  container.style.display = 'block';
+  const catIcons = { pdf:'📄', image:'🖼️', video:'🎬', ai:'✨' };
+  list.innerHTML = recent.map(id => {
+    const tool = TOOLS.find(t => t.id === id);
+    if (!tool) return '';
+    return `<div class="recent-tool-chip" onclick="openTool('${tool.id}')">
+      <span class="rtc-icon">${catIcons[tool.cat] || '🔧'}</span>
+      ${tool.name}
+      <span class="rtc-remove" onclick="removeRecentTool('${tool.id}', event)" title="移除">✕</span>
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+// ─────────────────────────────────────────────
+// FEEDBACK
+// ─────────────────────────────────────────────
+function openFeedback() {
+  document.getElementById('feedbackOverlay').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeFeedback() {
+  document.getElementById('feedbackOverlay').classList.remove('open');
+}
+
+function submitFeedback(e) {
+  e.preventDefault();
+  const type = document.getElementById('fbType').value;
+  const email = document.getElementById('fbEmail').value;
+  const content = document.getElementById('fbContent').value;
+
+  // Store feedback locally (no server)
+  try {
+    const feedbacks = JSON.parse(localStorage.getItem('minitool_feedbacks') || '[]');
+    feedbacks.push({ type, email, content, time: new Date().toISOString() });
+    localStorage.setItem('minitool_feedbacks', JSON.stringify(feedbacks));
+  } catch {}
+
+  toast('感谢您的反馈！我们会尽快处理。', 'success');
+  closeFeedback();
+  document.getElementById('feedbackForm').reset();
+}
+
+// ─────────────────────────────────────────────
+// ENHANCED SEARCH
+// ─────────────────────────────────────────────
+function filterTools() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.tool-card').forEach(card => {
+    const name = card.querySelector('h3').textContent.toLowerCase();
+    const desc = card.querySelector('p').textContent.toLowerCase();
+    const match = !q || name.includes(q) || desc.includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+  // Also filter section titles: hide if no visible cards under them
+  document.querySelectorAll('.section-title').forEach(title => {
+    const nextGrid = title.nextElementSibling;
+    if (nextGrid && nextGrid.classList.contains('tools-grid')) {
+      const visibleCards = nextGrid.querySelectorAll('.tool-card:not([style*="display: none"])');
+      title.style.display = visibleCards.length > 0 ? '' : 'none';
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// MODIFY openTool TO RECORD RECENT USAGE
+// ─────────────────────────────────────────────
+// We need to patch the existing openTool function
+const _originalOpenTool = openTool;
+openTool = function(id) {
+  addRecentTool(id);
+  _originalOpenTool(id);
+};
+
+// ─────────────────────────────────────────────
+// INIT: Render recent tools on page load
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderRecentTools();
+});
 
 <!-- PWA Service Worker -->
 <script>
