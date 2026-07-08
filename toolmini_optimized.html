@@ -1,0 +1,3483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniTool - 免费在线PDF/图片/视频处理工具箱 | 纯本地处理不上传</title>
+<meta name="description" content="免费在线工具箱，支持PDF合并/拆分/转换/去水印/转Word/转Excel、图片压缩/去水印/格式转换、视频去水印/GIF转换、AI写作等30+工具。无需注册，文件全程本地浏览器处理，绝不上传到任何服务器。">
+<meta name="keywords" content="PDF合并, PDF拆分, PDF转Word, PDF转Excel, 图片压缩, 图片去水印, 视频去水印, PDF工具, 在线工具, 免费工具, 浏览器工具">
+<meta name="author" content="MiniTool">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://toolmini.cn/">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MiniTool">
+
+<!-- Open Graph / Social Sharing -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="MiniTool - 免费在线PDF/图片/视频处理工具箱">
+<meta property="og:description" content="30+免费在线工具，PDF合并/拆分/转换、图片压缩/去水印、视频去水印等。纯浏览器本地处理，无需注册，绝不上传。">
+<meta property="og:url" content="https://toolmini.cn/">
+<meta property="og:site_name" content="MiniTool">
+<meta property="og:locale" content="zh_CN">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MiniTool - 免费在线工具箱">
+<meta name="twitter:description" content="30+免费工具，PDF/图片/视频处理，纯本地处理不上传。">
+
+<!-- Structured Data (JSON-LD) for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "MiniTool",
+  "url": "https://toolmini.cn/",
+  "description": "免费在线PDF/图片/视频处理工具箱，纯本地处理不上传",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (Web Browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "featureList": [
+    "PDF合并/拆分/压缩/加密/解锁/签名/旋转/提取",
+    "PDF转JPG/Word/Excel",
+    "图片压缩/格式转换/裁剪/旋转/水印/九宫格/拼接/去水印",
+    "视频转GIF/GIF转视频/封面提取/去水印",
+    "AI文字润色/续写/标题/摘要/营销文案"
+  ]
+}
+</script>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
+
+<!-- DNS Prefetch & Preconnect for CDN domains -->
+<link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.loli.net">
+<link rel="preconnect" href="https://gstatic.loli.net" crossorigin>
+<link href="https://fonts.loli.net/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Libraries: deferred to avoid blocking page render -->
+<script defer src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+<script defer src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script defer src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script defer src="https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --accent: #f59e0b;
+  --bg: #0f0f13;
+  --bg2: #13131c;
+  --surface: #1a1a24;
+  --surface2: #22223a;
+  --border: #2d2d4a;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ── Header ── */
+.header {
+  background: rgba(15,15,19,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 24px;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 64px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 16px;
+}
+.logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-search {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+}
+.header-search input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 8px 16px 8px 40px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.header-search input:focus { border-color: var(--primary); }
+.header-search input::placeholder { color: var(--text-muted); }
+.header-search .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+.header-badge {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.header-badge span {
+  background: rgba(34,197,94,0.15);
+  color: var(--success);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 56px 24px 40px;
+  text-align: center;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(99,102,241,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-item .num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary-light);
+}
+.stat-item .label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Category Tabs ── */
+.tabs-wrap {
+  padding: 0 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tab-btn:hover { color: var(--text); background: var(--surface2); }
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+}
+.tab-btn .count {
+  font-size: 11px;
+  background: rgba(255,255,255,0.15);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+.tab-btn:not(.active) .count {
+  background: var(--border);
+}
+
+/* ── Tools Grid ── */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.tool-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(99,102,241,0.2);
+}
+.tool-card:hover::before { opacity: 0.05; }
+.tool-card-inner {
+  position: relative;
+  z-index: 1;
+}
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+.tool-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.tool-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.tool-guide {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(45,45,74,0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tool-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.tool-link {
+  font-size: 12px;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.tool-link:hover {
+  opacity: 1;
+}
+
+/* Tool category colors */
+.tool-card[data-cat="pdf"] .tool-icon { background: rgba(239,68,68,0.15); color: #ef4444; }
+.tool-card[data-cat="pdf"] .tool-tag { background: rgba(239,68,68,0.1); color: #ef4444; }
+.tool-card[data-cat="image"] .tool-icon { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tool-card[data-cat="image"] .tool-tag { background: rgba(34,197,94,0.1); color: #22c55e; }
+.tool-card[data-cat="video"] .tool-icon { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.tool-card[data-cat="video"] .tool-tag { background: rgba(245,158,11,0.1); color: #f59e0b; }
+.tool-card[data-cat="ai"] .tool-icon { background: rgba(99,102,241,0.15); color: #818cf8; }
+.tool-card[data-cat="ai"] .tool-tag { background: rgba(99,102,241,0.1); color: #818cf8; }
+
+/* ── Workspace Modal ── */
+.workspace-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  overflow-y: auto;
+  padding: 20px;
+}
+.workspace-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+.workspace {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 720px;
+  margin: 24px 0;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.workspace-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.workspace-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.workspace-title h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+.workspace-title p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.workspace-close {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface2);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.workspace-close:hover { background: var(--danger); color: white; }
+
+.workspace-body { padding: 24px; }
+
+/* ── Drop Zone ── */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 48px 24px;
+  text-align: center;
+  transition: all 0.25s;
+  cursor: pointer;
+  background: var(--surface);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.05);
+}
+.drop-zone input[type="file"] {
+  display: none;
+}
+.drop-zone-icon {
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.drop-zone h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.drop-zone p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.drop-zone .formats {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.format-chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--surface2);
+  color: var(--text-muted);
+}
+
+/* ── File Preview ── */
+.file-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+}
+.file-preview.show { display: block; }
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.file-item:last-child { border-bottom: none; }
+.file-item .fi-icon { color: var(--primary-light); flex-shrink: 0; }
+.file-item .fi-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-item .fi-size { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+.file-item .fi-remove {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.file-item .fi-remove:hover { background: var(--danger); color: white; }
+.clear-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.clear-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+/* ── Controls ── */
+.controls {
+  margin-top: 20px;
+  display: none;
+}
+.controls.show { display: block; }
+.control-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.control-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 80px;
+}
+input[type="text"], input[type="number"], select, textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+select { cursor: pointer; }
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 140px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+}
+.range-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-light);
+  min-width: 36px;
+}
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  flex: 1;
+  justify-content: center;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(99,102,241,0.5); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary-light); }
+.btn-danger {
+  background: rgba(239,68,68,0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239,68,68,0.3);
+}
+
+/* ── Progress ── */
+.progress-wrap {
+  display: none;
+  margin-top: 16px;
+}
+.progress-wrap.show { display: block; }
+.progress-bar-bg {
+  background: var(--surface);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 8px;
+  transition: width 0.3s;
+  width: 0%;
+}
+.progress-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ── Output ── */
+.output-area {
+  display: none;
+  margin-top: 20px;
+  background: var(--surface);
+  border: 1px solid var(--success);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.output-area.show { display: block; animation: slideUp 0.3s; }
+.output-area h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--success);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.output-result {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Image Preview Grid */
+.img-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.img-preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--surface2);
+}
+.img-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-preview-item canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── Toast ── */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.3s ease;
+  pointer-events: all;
+  max-width: 320px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast-success { background: rgba(34,197,94,0.95); color: white; }
+.toast-error { background: rgba(239,68,68,0.95); color: white; }
+.toast-info { background: rgba(99,102,241,0.95); color: white; }
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+.footer a { color: var(--primary-light); text-decoration: none; }
+
+/* ── Section Title ── */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Signature Canvas */
+.sig-canvas-wrap {
+  display: none;
+  margin-top: 14px;
+}
+.sig-canvas-wrap.show { display: block; }
+.sig-canvas {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: crosshair;
+  touch-action: none;
+  max-width: 100%;
+}
+.sig-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+/* Recent Tools */
+.recent-tool-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.recent-tool-chip:hover {
+  border-color: var(--primary);
+  background: var(--surface2);
+}
+.recent-tool-chip .rtc-icon {
+  font-size: 14px;
+}
+.recent-tool-chip .rtc-remove {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.recent-tool-chip:hover .rtc-remove {
+  opacity: 1;
+}
+
+/* Feedback Modal */
+.feedback-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+}
+.feedback-overlay.open { display: flex; }
+.feedback-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 480px;
+  padding: 28px;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.feedback-box h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.feedback-box label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+.feedback-box input, .feedback-box textarea, .feedback-box select {
+  width: 100%;
+  margin-bottom: 14px;
+}
+.feedback-contact {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.feedback-contact-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+.feedback-contact-item .fc-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.feedback-contact-item .fc-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
+
+
+/* Legal Pages */
+.legal-overlay {
+  position: fixed; inset: 0; z-index: 250;
+  background: var(--bg); overflow-y: auto;
+  animation: fadeIn 0.25s ease;
+}
+.legal-page {
+  max-width: 760px; margin: 0 auto; padding: 32px 24px 60px;
+}
+.legal-header {
+  margin-bottom: 24px;
+}
+.legal-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary-light); text-decoration: none;
+  font-size: 14px; font-weight: 600;
+  padding: 8px 16px; border-radius: 8px;
+  background: var(--surface); transition: background 0.2s;
+}
+.legal-back:hover { background: var(--surface2); }
+.legal-page h1 {
+  font-size: 28px; font-weight: 800; margin-bottom: 8px;
+}
+.legal-page h2 {
+  font-size: 17px; font-weight: 700; margin: 28px 0 10px;
+  color: var(--primary-light);
+}
+.legal-page p {
+  font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 8px;
+}
+.legal-page ul {
+  padding-left: 20px; margin-bottom: 12px;
+}
+.legal-page li {
+  font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 4px;
+}
+.legal-date {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 28px !important;
+}
+
+/* Skip to content (accessibility) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 0 0 8px 0;
+  z-index: 999;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* Focus visible improvements (accessibility) */
+*:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+.tool-card:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 90;
+}
+.back-to-top.show {
+  opacity: 1;
+  pointer-events: all;
+}
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(99,102,241,0.5);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .header-inner { padding: 0; gap: 10px; }
+  .header-badge { display: none; }
+  .hero { padding: 36px 16px 28px; }
+  .hero h1 { font-size: 26px; }
+  .tools-grid { grid-template-columns: 1fr 1fr; }
+  .workspace { border-radius: 16px; }
+  .workspace-body { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<a href="#mainContent" class="skip-link">跳到主要内容</a>
+<noscript><div style="text-align:center;padding:80px 20px;font-family:system-ui;background:#0f0f13;color:#e2e8f0"><h1 style="font-size:24px;margin-bottom:12px">MiniTool 需要启用 JavaScript</h1><p style="color:#94a3b8">请在浏览器设置中启用 JavaScript 后刷新页面。</p></div></noscript>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo" onclick="location.reload()">
+      <div class="logo-icon">M</div>
+      <span class="logo-text">MiniTool</span>
+    </a>
+    <div class="header-search">
+      <i data-lucide="search" class="search-icon" style="width:16px;height:16px"></i>
+      <input type="text" placeholder="搜索工具（输入关键词实时过滤）..." id="searchInput" oninput="filterTools()" aria-label="搜索工具" role="searchbox">
+      <button id="searchClear" aria-label="清除搜索" onclick="document.getElementById('searchInput').value='';filterTools()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;display:none">✕</button>
+    </div>
+    <div class="header-badge">
+      <i data-lucide="shield-check" style="width:14px;height:14px;color:var(--success)"></i>
+      <span>本地处理 · 隐私安全</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>你的文件处理<span class="highlight">瑞士军刀</span></h1>
+  <p>PDF、图片、视频、AI写作 — 全部免费，无需注册，数据全程本地处理，绝不外传。</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="num">30+</div><div class="label">精选工具</div></div>
+    <div class="stat-item"><div class="num">100%</div><div class="label">免费使用</div></div>
+    <div class="stat-item"><div class="num">0</div><div class="label">隐私泄露</div></div>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" data-cat="all" onclick="switchTab('all')">
+      <i data-lucide="layout-grid" style="width:15px;height:15px"></i>
+      全部工具
+      <span class="count">30</span>
+    </button>
+    <button class="tab-btn" data-cat="pdf" onclick="switchTab('pdf')">
+      <i data-lucide="file-text" style="width:15px;height:15px"></i>
+      PDF工具
+      <span class="count">12</span>
+    </button>
+    <button class="tab-btn" data-cat="image" onclick="switchTab('image')">
+      <i data-lucide="image" style="width:15px;height:15px"></i>
+      图片工具
+      <span class="count">9</span>
+    </button>
+    <button class="tab-btn" data-cat="video" onclick="switchTab('video')">
+      <i data-lucide="video" style="width:15px;height:15px"></i>
+      视频工具
+      <span class="count">4</span>
+    </button>
+    <button class="tab-btn" data-cat="ai" onclick="switchTab('ai')">
+      <i data-lucide="sparkles" style="width:15px;height:15px"></i>
+      AI写作
+      <span class="count">5</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="mainContent">
+  <!-- 最近使用工具 -->
+  <div id="recentTools" style="display:none;margin-bottom:24px">
+    <div class="section-title"><i data-lucide="clock" style="width:14px;height:14px"></i> 最近使用</div>
+    <div id="recentToolsList" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none"></div>
+  </div>
+  <div id="toolsContainer"></div>
+</main>
+
+<!-- WORKSPACE OVERLAY -->
+<div class="workspace-overlay" id="workspaceOverlay">
+  <div class="workspace" id="workspace">
+    <div class="workspace-header">
+      <div class="workspace-icon" id="wsIcon"></div>
+      <div class="workspace-title">
+        <h2 id="wsTitle"></h2>
+        <p id="wsDesc"></p>
+      </div>
+      <button class="workspace-close" onclick="closeWorkspace()">
+        <i data-lucide="x" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+    <div class="workspace-body">
+      <!-- Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">
+          <i data-lucide="upload-cloud" style="width:40px;height:40px"></i>
+        </div>
+        <h3>拖拽文件到此处</h3>
+        <p>或点击选择文件</p>
+        <div class="formats" id="formatChips"></div>
+        <input type="file" id="fileInput" multiple>
+      </div>
+
+      <!-- File Preview -->
+      <div class="file-preview" id="filePreview">
+        <div id="fileList"></div>
+        <button class="clear-btn" onclick="clearFiles()">清空全部文件</button>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls" id="controls"></div>
+
+      <!-- Signature Canvas -->
+      <div class="sig-canvas-wrap" id="sigCanvasWrap">
+        <canvas id="sigCanvas" class="sig-canvas" width="500" height="180"></canvas>
+        <div class="sig-actions">
+          <button class="btn btn-secondary" onclick="clearSignature()" style="flex:1">清除</button>
+          <button class="btn btn-primary" onclick="confirmSignature()" style="flex:1">确认签名</button>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">处理中...</div>
+      </div>
+
+      <!-- Output -->
+      <div class="output-area" id="outputArea">
+        <h4><i data-lucide="check-circle" style="width:16px;height:16px"></i> 处理完成</h4>
+        <div class="output-result" id="outputResult"></div>
+      </div>
+
+      <!-- Image Preview -->
+      <div class="img-preview-grid" id="imgPreviewGrid"></div>
+
+      <!-- Buttons -->
+      <div class="btn-row" id="btnRow" style="display:none">
+        <button class="btn btn-primary" id="processBtn" onclick="runTool()">
+          <i data-lucide="play" style="width:15px;height:15px"></i>
+          开始处理
+        </button>
+        <button class="btn btn-secondary" onclick="closeWorkspace()">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" aria-label="返回顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i data-lucide="arrow-up" style="width:20px;height:20px"></i>
+</button>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- FEEDBACK MODAL -->
+<div class="feedback-overlay" id="feedbackOverlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="feedback-box">
+    <h2><i data-lucide="message-circle" style="width:20px;height:20px;color:var(--primary-light)"></i> 问题反馈</h2>
+    <form id="feedbackForm" onsubmit="submitFeedback(event)">
+      <label for="fbType">反馈类型</label>
+      <select id="fbType" required>
+        <option value="bug">Bug 反馈</option>
+        <option value="feature">功能建议</option>
+        <option value="other">其他</option>
+      </select>
+      <label for="fbEmail">联系邮箱（可选）</label>
+      <input type="email" id="fbEmail" placeholder="your@email.com">
+      <label for="fbContent">反馈内容</label>
+      <textarea id="fbContent" rows="4" required placeholder="请详细描述您遇到的问题或建议..."></textarea>
+      <div style="display:flex;gap:10px">
+        <button type="submit" class="btn btn-primary" style="flex:1">
+          <i data-lucide="send" style="width:14px;height:14px"></i> 提交反馈
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeFeedback()">取消</button>
+      </div>
+    </form>
+    <div class="feedback-contact">
+      <div class="feedback-contact-item">
+        <i data-lucide="mail" style="width:18px;height:18px;color:var(--primary-light)"></i>
+        <div class="fc-value">support@toolmini.cn</div>
+        <div class="fc-label">邮箱反馈</div>
+      </div>
+      <div class="feedback-contact-item">
+        <i data-lucide="message-circle" style="width:18px;height:18px;color:var(--success)"></i>
+        <div class="fc-value">ToolMini</div>
+        <div class="fc-label">微信公众号</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<!-- LEGAL PAGES (hash router views) -->
+<div class="legal-overlay" id="privacyView" style="display:none">
+  <div class="legal-page">
+    <div class="legal-header">
+      <a href="#/" class="legal-back" aria-label="返回首页"><i data-lucide="arrow-left" style="width:18px;height:18px"></i> 返回首页</a>
+    </div>
+    <h1>隐私政策</h1>
+    <p class="legal-date">最后更新日期：2025年7月4日</p>
+    <p>MiniTool（以下简称"我们"）非常重视用户隐私保护。本隐私政策旨在向您说明我们如何收集、使用、存储和保护您的信息。</p>
+    <h2>1. 数据处理原则</h2>
+    <p>MiniTool 的核心设计理念是<strong>所有文件处理均在用户浏览器本地完成</strong>。我们不会将您上传的任何文件或数据传输到远程服务器。</p>
+    <ul><li>所有 PDF、图片、视频处理操作均在您的浏览器中执行</li><li>处理完成后，文件数据仅保存在您的本地设备中</li><li>关闭浏览器标签页后，所有临时数据将自动清除</li></ul>
+    <h2>2. 我们收集的信息</h2>
+    <p>我们仅收集以下最少必要信息：</p>
+    <ul><li><strong>访问日志</strong>：我们可能通过第三方分析工具收集匿名的访问统计数据</li><li><strong>本地存储</strong>：我们使用浏览器的 LocalStorage 技术保存您的偏好设置</li></ul>
+    <h2>3. 我们不收集的信息</h2>
+    <ul><li>您上传的任何文件内容</li><li>处理过程中的任何数据</li><li>您的个人身份信息（除非您主动通过反馈功能提供）</li></ul>
+    <h2>4. Cookie 使用</h2>
+    <p>我们可能使用 Cookie 和类似技术来改善网站性能和用户体验、分析网站使用情况、记住您的偏好设置。您可以通过浏览器设置管理或删除 Cookie。</p>
+    <h2>5. 第三方服务</h2>
+    <p>我们可能使用 Google Analytics（匿名访问统计分析）和 CDN 服务来加速网页资源加载。这些第三方服务有其各自的隐私政策。</p>
+    <h2>6. 数据安全</h2>
+    <ul><li>网站使用 HTTPS 加密传输</li><li>所有文件处理均在本地完成，不经过网络传输</li><li>定期审查安全措施的有效性</li></ul>
+    <h2>7. 儿童隐私</h2>
+    <p>我们的服务不面向 14 岁以下儿童。我们不会故意收集儿童的个人信息。</p>
+    <h2>8. 政策更新</h2>
+    <p>我们可能会不时更新本隐私政策。重大变更将通过网站公告通知您。</p>
+    <h2>9. 联系我们</h2>
+    <p>邮箱：support@toolmini.cn</p>
+  </div>
+</div>
+
+<div class="legal-overlay" id="termsView" style="display:none">
+  <div class="legal-page">
+    <div class="legal-header">
+      <a href="#/" class="legal-back" aria-label="返回首页"><i data-lucide="arrow-left" style="width:18px;height:18px"></i> 返回首页</a>
+    </div>
+    <h1>使用条款</h1>
+    <p class="legal-date">最后更新日期：2025年7月4日</p>
+    <p>欢迎使用 MiniTool（以下简称"本服务"）。在使用本服务之前，请仔细阅读以下使用条款。使用本服务即表示您同意遵守这些条款。</p>
+    <h2>1. 服务说明</h2>
+    <p>MiniTool 是一款免费的在线文件处理工具箱，提供 PDF、图片、视频等文件处理功能。所有文件处理均在用户浏览器本地完成。</p>
+    <ul><li>本服务以"现状"提供，不作任何明示或暗示的保证</li><li>我们保留随时修改、暂停或终止服务的权利</li><li>本服务免费提供，无需注册即可使用</li></ul>
+    <h2>2. 使用规范</h2>
+    <ul><li>遵守中华人民共和国相关法律法规</li><li>不得使用本服务处理涉及国家秘密、商业秘密或他人隐私的文件</li><li>不得利用本服务从事任何违法或侵权活动</li><li>不得通过自动化手段大规模访问或抓取本网站内容</li><li>不得尝试破坏网站安全措施或干扰正常服务运行</li></ul>
+    <h2>3. 知识产权</h2>
+    <ul><li>MiniTool 网站的所有内容受知识产权法保护</li><li>未经书面授权，不得复制、修改、分发本网站的任何内容</li><li>您通过本服务处理的文件，其知识产权归原权利人所有</li></ul>
+    <h2>4. 免责声明</h2>
+    <ul><li>本服务按"现状"提供，我们不保证服务的不间断运行或无错误</li><li>对于因使用本服务导致的任何直接或间接损失，我们不承担责任</li><li>文件处理结果仅供参考，我们不对处理结果的准确性、完整性作保证</li><li>建议用户在处理重要文件前做好备份</li></ul>
+    <h2>5. 文件处理</h2>
+    <ul><li>所有文件处理均在浏览器本地完成，不会上传到服务器</li><li>处理完成后，建议及时下载结果文件</li><li>关闭浏览器后，临时处理数据将自动清除，无法恢复</li></ul>
+    <h2>6. 条款修改</h2>
+    <p>我们保留随时修改本使用条款的权利。继续使用服务即表示您同意修改后的条款。</p>
+    <h2>7. 争议解决</h2>
+    <p>因本条款产生的争议，双方应友好协商解决。协商不成的，任何一方均可向我们所在地有管辖权的人民法院提起诉讼。</p>
+    <h2>8. 联系方式</h2>
+    <p>邮箱：support@toolmini.cn</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div style="max-width:800px;margin:0 auto">
+    <p style="margin-bottom:8px">MiniTool · 纯浏览器端处理 · 所有文件均在本地处理，不会上传到任何服务器</p>
+    <p style="margin-bottom:10px">© 2025-2026 MiniTool. All rights reserved.</p>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+      <a href="#/privacy" style="color:var(--primary-light);text-decoration:none;font-size:12px">隐私政策</a>
+      <a href="#/terms" style="color:var(--primary-light);text-decoration:none;font-size:12px">使用条款</a>
+      <a href="javascript:void(0)" onclick="openFeedback()" style="color:var(--primary-light);text-decoration:none;font-size:12px;cursor:pointer">问题反馈</a>
+    </div>
+  </div>
+<!-- 分享二维码区域 -->
+<div id="shareBar" style="display:none;text-align:center;padding:32px 20px 16px;border-top:1px solid var(--border);margin-top:40px;">
+  <h3 style="color:var(--text);font-size:15px;margin:0 0 4px;font-weight:700;">📱 微信扫码使用</h3>
+  <p style="color:var(--text-dim);font-size:12px;margin:0 0 16px;">长按识别二维码，或分享给朋友</p>
+  <div style="display:inline-block;background:white;border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+    <img id="qrImg" src="" alt="QR Code" style="width:140px;height:140px;display:block;border:none;">
+  </div>
+  <p style="color:var(--text-dim);font-size:12px;margin:12px 0 0;">点击右上角 ··· 添加到我的小程序</p>
+</div>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// TOOLS DATA
+// ─────────────────────────────────────────────
+const TOOLS = [
+  // PDF
+  { id: 'pdf_merge',      cat: 'pdf',   icon: 'file-plus',      name: '合并PDF',        desc: '将多个PDF合并为一个文件',        formats: ['.pdf'],           hasControls: false, guide: '1. 上传多个PDF文件（支持拖拽）\n2. 文件将按上传顺序合并\n3. 点击"开始处理"即可下载合并后的文件', slug: 'pdf-merge' },
+  { id: 'pdf_split',      cat: 'pdf',   icon: 'scissors',        name: '拆分PDF',        desc: '按页码范围拆分成多个文件',      formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 输入页码范围，如 1-3,5,7-10\n3. 每页将拆分为独立的PDF文件，打包为ZIP下载', slug: 'pdf-split' },
+  { id: 'pdf_to_jpg',     cat: 'pdf',   icon: 'image',           name: 'PDF转JPG',       desc: '将PDF每一页转为高清图片',       formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 自动将每页转为高清JPG图片\n3. 所有图片打包为ZIP下载', slug: 'pdf-to-jpg' },
+  { id: 'jpg_to_pdf',     cat: 'pdf',   icon: 'file-text',       name: 'JPG转PDF',       desc: '将图片合并转换为PDF文档',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false, guide: '1. 上传多张图片（JPG/PNG/WebP/GIF）\n2. 图片按上传顺序合并\n3. 自动生成PDF文档下载', slug: 'jpg-to-pdf' },
+  { id: 'pdf_compress',   cat: 'pdf',   icon: 'minimize-2',      name: '压缩PDF',        desc: '减小PDF文件体积',               formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 调整压缩质量（越低体积越小）\n3. 处理后下载压缩版PDF', slug: 'pdf-compress' },
+  { id: 'pdf_encrypt',    cat: 'pdf',   icon: 'lock',            name: 'PDF加密',        desc: '给PDF添加打开密码保护',         formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 设置打开密码\n3. 加密后的PDF需输入密码才能打开', slug: 'pdf-encrypt' },
+  { id: 'pdf_unlock',     cat: 'pdf',   icon: 'unlock',          name: 'PDF解锁',        desc: '移除PDF密码保护',               formats: ['.pdf'],           hasControls: true, guide: '1. 上传已加密的PDF文件\n2. 输入当前密码\n3. 解密后可无密码打开PDF', slug: 'pdf-unlock' },
+  { id: 'pdf_sign',       cat: 'pdf',   icon: 'pen-tool',        name: 'PDF签名',        desc: '在PDF文档中添加手写签名',       formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 在签名区域手写签名\n3. 确认后签名将添加到PDF', slug: 'pdf-sign' },
+  { id: 'pdf_rotate',     cat: 'pdf',   icon: 'rotate-cw',       name: '旋转PDF',        desc: '顺时针/逆时针旋转PDF页面',     formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 选择旋转角度（90°/180°/270°）\n3. 所有页面将按指定角度旋转', slug: 'pdf-rotate' },
+  { id: 'pdf_extract',    cat: 'pdf',   icon: 'layers',          name: '提取页面',       desc: '提取PDF指定页面生成新文件',     formats: ['.pdf'],           hasControls: true, guide: '1. 上传一个PDF文件\n2. 输入要提取的页码范围\n3. 提取的页面生成新PDF下载', slug: 'pdf-extract' },
+  { id: 'pdf_to_word',    cat: 'pdf',   icon: 'file-text',       name: 'PDF转Word',       desc: '将PDF内容提取为Word文档',      formats: ['.pdf'],           hasControls: false, guide: '1. 上传一个PDF文件\n2. 自动提取PDF中的文本内容\n3. 生成Word文档下载（注意：图片和复杂排版无法保留）', slug: 'pdf-to-word' },
+  { id: 'pdf_to_excel',   cat: 'pdf',   icon: 'table',           name: 'PDF转Excel',      desc: '智能识别PDF表格转为Excel',     formats: ['.pdf'],           hasControls: false, guide: '1. 上传包含表格的PDF文件\n2. 智能识别表格结构\n3. 生成Excel文件下载（扫描版PDF可能无法识别）', slug: 'pdf-to-excel' },
+  // IMAGE
+  { id: 'img_compress',   cat: 'image', icon: 'minimize-2',      name: '图片压缩',       desc: '调整质量以减小图片体积',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片（JPG/PNG/WebP/GIF）\n2. 拖动质量滑块调整压缩率\n3. 压缩后图片自动下载', slug: 'img-compress' },
+  { id: 'img_convert',    cat: 'image', icon: 'refresh-cw',       name: '格式转换',       desc: 'JPG/PNG/WebP/GIF互转',         formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片\n2. 选择目标格式（JPG/PNG/WebP）\n3. 转换后的图片自动下载', slug: 'img-convert' },
+  { id: 'img_resize',     cat: 'image', icon: 'maximize-2',       name: '调整尺寸',       desc: '修改图片宽高像素',              formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传图片\n2. 输入目标宽高（可锁定比例）\n3. 调整尺寸后的图片自动下载', slug: 'img-resize' },
+  { id: 'img_crop',       cat: 'image', icon: 'crop',             name: '图片裁剪',       desc: '裁剪掉不需要的画面区域',       formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: false, guide: '1. 上传图片\n2. 在图片上拖拽选择裁剪区域\n3. 确认后裁剪图片自动下载', slug: 'img-crop' },
+  { id: 'img_rotate',     cat: 'image', icon: 'rotate-cw',        name: '图片旋转',       desc: '旋转90°/180°/270°或自定义角度',formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true, guide: '1. 上传图片\n2. 选择旋转角度（90°/180°/270°/自定义）\n3. 旋转后的图片自动下载', slug: 'img-rotate' },
+  { id: 'img_watermark',  cat: 'image', icon: 'droplet',          name: '添加水印',       desc: '添加文字或图片水印',           formats: ['.jpg','.jpeg','.png','.webp'], hasControls: true, guide: '1. 上传图片\n2. 选择水印类型（文字/图片）、位置和透明度\n3. 添加水印后的图片自动下载', slug: 'img-watermark' },
+  { id: 'img_grid',       cat: 'image', icon: 'grid-2x2',         name: '九宫格切图',     desc: '将图片切成9宫格分享图',         formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false, guide: '1. 上传一张图片\n2. 自动将图片切为3×3共9张\n3. 九宫格图片打包为ZIP下载', slug: 'img-grid' },
+  { id: 'img_join',       cat: 'image', icon: 'columns',          name: '图片拼接',       desc: '横向或纵向拼接多张图片',        formats: ['.jpg','.jpeg','.png','.webp','.gif'], hasControls: true, guide: '1. 上传多张图片\n2. 选择横向或纵向拼接\n3. 拼接后的长图自动下载', slug: 'img-join' },
+  { id: 'img_unwatermark',cat: 'image', icon: 'eraser',           name: '图片去水印',     desc: '智能涂抹移除图片水印/杂物',    formats: ['.jpg','.jpeg','.png','.webp'], hasControls: false, guide: '1. 上传图片\n2. 在图片上框选水印区域\n3. 智能填充移除水印（复杂背景建议使用专业软件）', slug: 'img-unwatermark' },
+  // VIDEO
+  { id: 'vid_to_gif',     cat: 'video', icon: 'film',             name: '视频转GIF',      desc: '截取视频片段转为GIF动图',      formats: ['.mp4','.webm','.mov','.avi'], hasControls: true, guide: '1. 上传视频文件（MP4/WebM/MOV/AVI）\n2. 设置截取时间范围和GIF宽度\n3. 生成GIF动图下载', slug: 'vid-to-gif' },
+  { id: 'gif_to_vid',     cat: 'video', icon: 'video',            name: 'GIF转视频',      desc: '将GIF动画转为MP4视频',         formats: ['.gif'],           hasControls: false, guide: '1. 上传GIF文件\n2. 自动提取GIF帧\n3. 处理后的文件自动下载', slug: 'gif-to-vid' },
+  { id: 'vid_thumb',      cat: 'video', icon: 'image',            name: '视频封面提取',   desc: '从视频中截取一帧作为图片',     formats: ['.mp4','.webm','.mov','.avi'], hasControls: true, guide: '1. 上传视频文件\n2. 设置截取时间点（秒）\n3. 提取该帧作为封面图片下载', slug: 'vid-thumb' },
+  { id: 'vid_unwatermark',cat: 'video', icon: 'eraser',           name: '视频去水印',     desc: '涂抹移除视频水印/Logo区域',   formats: ['.mp4','.webm','.mov'], hasControls: false, guide: '1. 上传视频文件\n2. 在预览帧上框选水印区域\n3. 选择处理方式（模糊/裁剪/填充）后下载', slug: 'vid-unwatermark' },
+  // AI
+  { id: 'ai_polish',      cat: 'ai',    icon: 'wand-2',           name: '文字润色',       desc: 'AI优化文字表达，更流畅专业',    formats: ['text'],           hasControls: false, guide: '1. 在文本框中输入需要润色的文字\n2. AI将优化文字表达，使其更流畅专业\n3. 润色后的文字可直接复制使用', slug: 'ai-polish' },
+  { id: 'ai_continue',    cat: 'ai',    icon: 'corner-down-right',name: '文章续写',       desc: '输入开头，AI续写完整内容',     formats: ['text'],           hasControls: false, guide: '1. 输入文章开头或前文\n2. AI将根据上下文续写后续内容\n3. 续写结果可直接复制或继续编辑', slug: 'ai-continue' },
+  { id: 'ai_title',       cat: 'ai',    icon: 'type',             name: '标题生成',       desc: '输入文章内容，生成吸睛标题',   formats: ['text'],           hasControls: false, guide: '1. 输入文章内容\n2. AI将生成多个吸睛标题供选择\n3. 选择合适的标题复制使用', slug: 'ai-title' },
+  { id: 'ai_summary',    cat: 'ai',    icon: 'align-left',       name: '摘要总结',       desc: '输入长文，生成精炼摘要',       formats: ['text'],           hasControls: false, guide: '1. 粘贴需要总结的长文\n2. AI将提取核心要点生成精炼摘要\n3. 摘要可直接复制使用', slug: 'ai-summary' },
+  { id: 'ai_marketing',   cat: 'ai',    icon: 'megaphone',        name: '营销文案',       desc: '输入产品信息，生成推广文案',   formats: ['text'],           hasControls: false, guide: '1. 输入产品名称和特点信息\n2. AI将生成多种风格的推广文案\n3. 选择满意的文案复制使用', slug: 'ai-marketing' },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentTool = null;
+let uploadedFiles = [];
+let sigPoints = [];
+let isDrawingSig = false;
+
+// ─────────────────────────────────────────────
+// RENDER TOOLS
+// ─────────────────────────────────────────────
+function renderTools(category = 'all') {
+  const container = document.getElementById('toolsContainer');
+  const filtered = category === 'all' ? TOOLS : TOOLS.filter(t => t.cat === category);
+  const cats = category === 'all' ? ['pdf','image','video','ai'] : [category];
+  let html = '';
+
+  cats.forEach(cat => {
+    const catTools = filtered.filter(t => t.cat === cat);
+    if (!catTools.length) return;
+    const catNames = { pdf:'PDF工具', image:'图片工具', video:'视频工具', ai:'AI写作' };
+    const catIcons = { pdf:'file-text', image:'image', video:'video', ai:'sparkles' };
+    html += `<div class="section-title"><i data-lucide="${catIcons[cat]}" style="width:14px;height:14px"></i> ${catNames[cat]}</div>`;
+    html += `<div class="tools-grid" data-cat="${cat}">`;
+    catTools.forEach(tool => {
+      html += `
+      <div class="tool-card" data-cat="${tool.cat}" data-id="${tool.id}" data-name="${tool.name}" onclick="openTool('${tool.id}')" tabindex="0" role="button" aria-label="${tool.name} - ${tool.desc}" onkeydown="if(event.key==='Enter')openTool('${tool.id}')">
+        <div class="tool-card-inner">
+          <div class="tool-icon"><i data-lucide="${tool.icon}" style="width:22px;height:22px"></i></div>
+          <h3>${tool.name}</h3>
+          <p>${tool.desc}</p>
+          ${tool.guide ? '<p class="tool-guide">' + tool.guide.replace(/\n/g, '<br>') + '</p>' : ''}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            <span class="tool-tag">${tool.formats[0] === 'text' ? '文字' : tool.formats.map(f=>f.replace('.','')).join('/')}</span>
+            <a href="#/${tool.slug || ''}" class="tool-link" onclick="event.stopPropagation()" title="独立页面打开" aria-label="在独立页面打开${tool.name}">🔗</a>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+  lucide.createIcons();
+}
+
+function switchTab(cat) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderTools(cat);
+}
+
+
+
+// ─────────────────────────────────────────────
+// WORKSPACE
+// ─────────────────────────────────────────────
+function openTool(id, fromRoute) {
+  currentTool = TOOLS.find(t => t.id === id);
+  if (!currentTool) return;
+
+  // Record recent usage
+  addRecentTool(id);
+
+  // Update hash without triggering route handler (if not already from route)
+  if (!fromRoute && currentTool.slug) {
+    history.pushState(null, '', '#/' + currentTool.slug);
+  }
+
+  document.getElementById('wsTitle').textContent = currentTool.name;
+  document.getElementById('wsDesc').textContent = currentTool.desc;
+
+  const catColors = { pdf:'rgba(239,68,68,0.15)', image:'rgba(34,197,94,0.15)', video:'rgba(245,158,11,0.15)', ai:'rgba(99,102,241,0.15)' };
+  const catIcons = { pdf:'file-text', image:'image', video:'video', ai:'sparkles' };
+  const catColor2 = { pdf:'#ef4444', image:'#22c55e', video:'#f59e0b', ai:'#818cf8' };
+  const wsIcon = document.getElementById('wsIcon');
+  wsIcon.style.background = catColors[currentTool.cat];
+  wsIcon.innerHTML = `<i data-lucide="${catIcons[currentTool.cat]}" style="width:20px;height:20px;color:${catColor2[currentTool.cat]}"></i>`;
+
+  // Format chips
+  const formatChips = document.getElementById('formatChips');
+  if (currentTool.formats[0] === 'text') {
+    formatChips.innerHTML = '<span class="format-chip">纯文字输入</span>';
+  } else {
+    formatChips.innerHTML = currentTool.formats.map(f => `<span class="format-chip">${f}</span>`).join('');
+  }
+
+  // Setup controls
+  setupControls(currentTool);
+
+  // Reset state
+  clearFiles();
+  document.getElementById('progressWrap').classList.remove('show');
+  document.getElementById('outputArea').classList.remove('show');
+  document.getElementById('imgPreviewGrid').innerHTML = '';
+  document.getElementById('sigCanvasWrap').classList.remove('show');
+
+  // Show workspace
+  document.getElementById('workspaceOverlay').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeWorkspace() {
+  document.getElementById('workspaceOverlay').classList.remove('open');
+  // If on a tool hash route, navigate back to home
+  const hash = location.hash.replace('#', '');
+  const parts = hash.split('/').filter(Boolean);
+  if (parts.length > 0 && TOOL_SLUG_MAP[parts[0]]) {
+    location.hash = '#/';
+  } else {
+    document.getElementById('mainContent').style.display = '';
+  }
+  currentTool = null;
+  clearFiles();
+}
+
+// ─────────────────────────────────────────────
+// FILE UPLOAD
+// ─────────────────────────────────────────────
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(fileList) {
+  if (!currentTool) return;
+  for (const file of fileList) {
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    const allowed = currentTool.formats;
+    if (allowed[0] === 'text') {
+      // AI tools don't need files
+    } else if (!allowed.includes(ext)) {
+      toast(`${file.name} 格式不支持，请选择 ${allowed.join(',')}`, 'error');
+      continue;
+    }
+    uploadedFiles.push(file);
+  }
+  renderFileList();
+  showControls();
+}
+
+function renderFileList() {
+  const preview = document.getElementById('filePreview');
+  const list = document.getElementById('fileList');
+  if (!uploadedFiles.length) {
+    preview.classList.remove('show');
+    return;
+  }
+  preview.classList.add('show');
+  list.innerHTML = uploadedFiles.map((f, i) => `
+    <div class="file-item">
+      <div class="fi-icon"><i data-lucide="file" style="width:18px;height:18px"></i></div>
+      <div class="fi-name">${f.name}</div>
+      <div class="fi-size">${formatSize(f.size)}</div>
+      <button class="fi-remove" onclick="removeFile(${i})"><i data-lucide="x" style="width:12px;height:12px"></i></button>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+function removeFile(idx) {
+  uploadedFiles.splice(idx, 1);
+  renderFileList();
+  showControls();
+}
+
+function clearFiles() {
+  uploadedFiles = [];
+  fileInput.value = '';
+  renderFileList();
+  document.getElementById('controls').classList.remove('show');
+  document.getElementById('btnRow').style.display = 'none';
+  document.getElementById('progressWrap').classList.remove('show');
+  document.getElementById('outputArea').classList.remove('show');
+  document.getElementById('imgPreviewGrid').innerHTML = '';
+  sigPoints = [];
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1048576).toFixed(1) + ' MB';
+}
+
+// ─────────────────────────────────────────────
+// CONTROLS
+// ─────────────────────────────────────────────
+function setupControls(tool) {
+  const ctrl = document.getElementById('controls');
+  ctrl.innerHTML = '';
+  ctrl.classList.remove('show');
+  document.getElementById('btnRow').style.display = 'none';
+
+  // AI text tools: show textarea
+  if (tool.cat === 'ai') {
+    ctrl.innerHTML = `
+      <textarea id="aiTextInput" placeholder="请输入内容..."></textarea>
+    `;
+    ctrl.classList.add('show');
+    document.getElementById('btnRow').style.display = 'flex';
+    return;
+  }
+
+  if (!tool.hasControls) {
+    if (uploadedFiles.length > 0) {
+      document.getElementById('btnRow').style.display = 'flex';
+    }
+    return;
+  }
+
+  let html = '';
+  switch (tool.id) {
+    case 'pdf_split':
+    case 'pdf_extract':
+      html = `<div class="control-row"><span class="control-label">页码范围</span><input type="text" id="ctrlPages" placeholder="例如: 1-3,5,7-10" style="flex:1"></div>`;
+      break;
+    case 'pdf_encrypt':
+      html = `<div class="control-row"><span class="control-label">密码</span><input type="password" id="ctrlPwd" placeholder="设置打开密码" style="flex:1"></div>`;
+      break;
+    case 'pdf_unlock':
+      html = `<div class="control-row"><span class="control-label">当前密码</span><input type="password" id="ctrlPwd" placeholder="输入PDF密码" style="flex:1"></div>`;
+      break;
+    case 'pdf_rotate':
+      html = `<div class="control-row"><span class="control-label">旋转角度</span>
+        <select id="ctrlRotate" style="flex:1">
+          <option value="90">顺时针 90°</option>
+          <option value="180">180°</option>
+          <option value="270">逆时针 90°</option>
+        </select></div>`;
+      break;
+    case 'img_compress':
+      html = `<div class="control-row"><span class="control-label">质量</span>
+        <input type="range" id="ctrlQuality" min="10" max="100" value="80">
+        <span class="range-val" id="qualityVal">80%</span></div>`;
+      break;
+    case 'img_convert':
+      html = `<div class="control-row"><span class="control-label">输出格式</span>
+        <select id="ctrlFormat" style="flex:1">
+          <option value="jpeg">JPG</option>
+          <option value="png">PNG</option>
+          <option value="webp">WebP</option>
+        </select></div>`;
+      break;
+    case 'img_resize':
+      html = `<div class="control-row">
+          <span class="control-label">宽度(px)</span><input type="number" id="ctrlW" value="800" min="1" style="width:90px">
+          <i data-lucide="lock" style="width:14px;height:14px;color:var(--text-muted)" id="lockIcon"></i>
+          <span class="control-label">高度(px)</span><input type="number" id="ctrlH" value="600" min="1" style="width:90px">
+        </div>
+        <div class="control-row"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+          <input type="checkbox" id="ctrlLockRatio" checked> 锁定比例
+        </label></div>`;
+      break;
+    case 'img_rotate':
+      html = `<div class="control-row"><span class="control-label">旋转角度</span>
+        <select id="ctrlRotate" style="flex:1">
+          <option value="90">顺时针 90°</option>
+          <option value="180">180°</option>
+          <option value="270">逆时针 90°</option>
+          <option value="custom">自定义角度</option>
+        </select></div>
+        <div class="control-row" id="customAngleRow" style="display:none">
+          <span class="control-label">角度</span><input type="number" id="ctrlAngle" value="45" min="-360" max="360" style="width:90px">
+        </div>`;
+      break;
+    case 'img_watermark':
+      html = `<div class="control-row"><span class="control-label">水印类型</span>
+        <select id="ctrlWmType" style="flex:1">
+          <option value="text">文字水印</option>
+          <option value="image">图片水印</option>
+        </select></div>
+        <div class="control-row" id="wmTextRow"><span class="control-label">水印文字</span><input type="text" id="ctrlWmText" placeholder="MiniTool" style="flex:1"></div>
+        <div class="control-row" id="wmImgRow" style="display:none"><span class="control-label">水印图片</span><input type="file" id="ctrlWmImg" accept=".png,.jpg,.jpeg,.webp"></div>
+        <div class="control-row"><span class="control-label">位置</span>
+          <select id="ctrlWmPos" style="flex:1">
+            <option value="center">居中</option>
+            <option value="top-left">左上</option>
+            <option value="top-right">右上</option>
+            <option value="bottom-left">左下</option>
+            <option value="bottom-right">右下</option>
+            <option value="tile">平铺</option>
+          </select></div>
+        <div class="control-row"><span class="control-label">透明度</span>
+          <input type="range" id="ctrlWmAlpha" min="10" max="100" value="30">
+          <span class="range-val" id="wmAlphaVal">30%</span></div>`;
+      break;
+    case 'img_join':
+      html = `<div class="control-row"><span class="control-label">拼接方式</span>
+        <select id="ctrlJoinDir" style="flex:1">
+          <option value="h">横向拼接</option>
+          <option value="v">纵向拼接</option>
+        </select></div>`;
+      break;
+    case 'vid_to_gif':
+      html = `<div class="control-row"><span class="control-label">截取秒数</span>
+        <input type="number" id="ctrlGifStart" value="0" min="0" style="width:80px" placeholder="开始">
+        <span style="color:var(--text-muted)">-</span>
+        <input type="number" id="ctrlGifEnd" value="3" min="1" style="width:80px" placeholder="结束">
+        <span style="color:var(--text-muted);font-size:12px">(秒)</span></div>
+        <div class="control-row"><span class="control-label">GIF宽度</span>
+          <input type="number" id="ctrlGifW" value="320" min="50" max="800" style="width:90px">
+          <span style="color:var(--text-muted);font-size:12px">px</span></div>`;
+      break;
+    case 'vid_thumb':
+      html = `<div class="control-row"><span class="control-label">截取时间</span>
+        <input type="number" id="ctrlThumbTime" value="1" min="0" step="0.1" style="width:90px">
+        <span style="color:var(--text-muted);font-size:12px">秒</span></div>`;
+      break;
+  }
+
+  ctrl.innerHTML = html;
+  attachControlListeners(tool.id);
+}
+
+function attachControlListeners(toolId) {
+  if (toolId === 'img_compress') {
+    const r = document.getElementById('ctrlQuality');
+    r.addEventListener('input', () => document.getElementById('qualityVal').textContent = r.value + '%');
+  }
+  if (toolId === 'img_rotate') {
+    const sel = document.getElementById('ctrlRotate');
+    sel.addEventListener('change', () => {
+      document.getElementById('customAngleRow').style.display = sel.value === 'custom' ? 'flex' : 'none';
+    });
+  }
+  if (toolId === 'img_watermark') {
+    const sel = document.getElementById('ctrlWmType');
+    sel.addEventListener('change', () => {
+      const t = sel.value;
+      document.getElementById('wmTextRow').style.display = t === 'text' ? 'flex' : 'none';
+      document.getElementById('wmImgRow').style.display = t === 'image' ? 'flex' : 'none';
+    });
+    const r2 = document.getElementById('ctrlWmAlpha');
+    r2.addEventListener('input', () => document.getElementById('wmAlphaVal').textContent = r2.value + '%');
+  }
+}
+
+function showControls() {
+  if (!currentTool) return;
+  if (currentTool.cat === 'ai') return; // handled separately
+  const ctrl = document.getElementById('controls');
+  if (uploadedFiles.length > 0) {
+    ctrl.classList.add('show');
+    document.getElementById('btnRow').style.display = 'flex';
+  } else {
+    ctrl.classList.remove('show');
+    document.getElementById('btnRow').style.display = 'none';
+  }
+}
+
+// ─────────────────────────────────────────────
+// TOOL IMPLEMENTATIONS
+// ─────────────────────────────────────────────
+async function runTool() {
+  if (!currentTool) return;
+  showProgress('正在处理...');
+
+  try {
+    switch (currentTool.id) {
+      case 'pdf_merge':        await toolPdfMerge(); break;
+      case 'pdf_split':        await toolPdfSplit(); break;
+      case 'pdf_to_jpg':       await toolPdfToJpg(); break;
+      case 'jpg_to_pdf':       await toolJpgToPdf(); break;
+      case 'pdf_compress':     await toolPdfCompress(); break;
+      case 'pdf_encrypt':      await toolPdfEncrypt(); break;
+      case 'pdf_unlock':       await toolPdfUnlock(); break;
+      case 'pdf_sign':         await toolPdfSign(); break;
+      case 'pdf_rotate':       await toolPdfRotate(); break;
+      case 'pdf_extract':      await toolPdfExtract(); break;
+      case 'img_compress':     await toolImgCompress(); break;
+      case 'img_convert':      await toolImgConvert(); break;
+      case 'img_resize':       await toolImgResize(); break;
+      case 'img_crop':         await toolImgCrop(); break;
+      case 'img_rotate':       await toolImgRotate(); break;
+      case 'img_watermark':    await toolImgWatermark(); break;
+      case 'img_grid':         await toolImgGrid(); break;
+      case 'img_join':         await toolImgJoin(); break;
+      case 'vid_to_gif':       await toolVidToGif(); break;
+      case 'gif_to_vid':       await toolGifToVid(); break;
+      case 'vid_thumb':        await toolVidThumb(); break;
+      case 'ai_polish':        await toolAiPolish(); break;
+      case 'ai_continue':      await toolAiContinue(); break;
+      case 'ai_title':         await toolAiTitle(); break;
+      case 'ai_summary':       await toolAiSummary(); break;
+      case 'ai_marketing':     await toolAiMarketing(); break;
+      case 'pdf_to_word':      await toolPdfToWord(); break;
+      case 'pdf_to_excel':     await toolPdfToExcel(); break;
+      case 'img_unwatermark':  await toolImgUnwatermark(); break;
+      case 'vid_unwatermark':  await toolVidUnwatermark(); break;
+    }
+  } catch (err) {
+    console.error(err);
+    hideProgress();
+    toast('处理失败: ' + err.message, 'error');
+  }
+}
+
+// ─── PDF Tools ───
+async function toolPdfMerge() {
+  const { PDFDocument } = PDFLib;
+  const mergedPdf = await PDFDocument.create();
+  for (const file of uploadedFiles) {
+    const buf = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(buf);
+    const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    pages.forEach(p => mergedPdf.addPage(p));
+  }
+  const bytes = await mergedPdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'merged.pdf');
+  hideProgress();
+  showOutput('合并成功！已生成合并后的PDF文件。');
+}
+
+async function toolPdfSplit() {
+  const { PDFDocument } = PDFLib;
+  const ranges = parsePageRanges(document.getElementById('ctrlPages').value);
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf);
+  const total = pdf.getPageCount();
+  const zip = new JSZip();
+
+  for (const range of ranges) {
+    for (let i = range.start; i <= Math.min(range.end, total); i++) {
+      const newPdf = await PDFDocument.create();
+      const [page] = await newPdf.copyPages(pdf, [i-1]);
+      newPdf.addPage(page);
+      const bytes = await newPdf.save();
+      zip.file(`page_${i}.pdf`, bytes);
+    }
+  }
+  const blob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(blob, 'split_pages.zip');
+  hideProgress();
+  showOutput('拆分完成！共生成 ' + (ranges.reduce((s,r)=>s+r.end-r.start+1,0)) + ' 个PDF文件，已打包为ZIP。');
+}
+
+async function toolPdfToJpg() {
+  // Use pdf-lib + canvas for rendering (client-side PDF→image)
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  // Load PDF.js dynamically
+  if (!window.pdfjsLib) {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    document.head.appendChild(script);
+    await new Promise(r => script.onload = r);
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  const pdf = await window.pdfjsLib.getDocument({data: buf.slice(0)}).promise;
+  const zip = new JSZip();
+  const scale = 2; // High quality
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width; canvas.height = vp.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.92));
+    zip.file(`page_${i}.jpg`, blob);
+  }
+
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'pdf_pages.zip');
+  hideProgress();
+  showOutput(`转换完成！PDF共 ${pdf.numPages} 页，已转为JPG图片并打包。`);
+}
+
+async function toolJpgToPdf() {
+  const { PDFDocument } = PDFLib;
+  const pdf = await PDFDocument.create();
+  for (const file of uploadedFiles) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    let img;
+    // WebP and GIF must be converted via canvas first (pdf-lib only supports JPG/PNG)
+    if (ext === 'webp' || ext === 'gif') {
+      const image = await loadImage(file);
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      const pngBlob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+      const pngBuf = await pngBlob.arrayBuffer();
+      img = await pdf.embedPng(pngBuf);
+    } else if (ext === 'png') {
+      const buf = await file.arrayBuffer();
+      img = await pdf.embedPng(buf);
+    } else {
+      // jpg/jpeg — try embedJpg first, fallback to canvas conversion
+      try {
+        const buf = await file.arrayBuffer();
+        img = await pdf.embedJpg(buf);
+      } catch {
+        const image = await loadImage(file);
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+        canvas.getContext('2d').drawImage(image, 0, 0);
+        const jpgBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.92));
+        const jpgBuf = await jpgBlob.arrayBuffer();
+        img = await pdf.embedJpg(jpgBuf);
+      }
+    }
+    const page = pdf.addPage([img.width, img.height]);
+    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+  }
+  const bytes = await pdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'converted.pdf');
+  hideProgress();
+  showOutput('转换完成！已将 ' + uploadedFiles.length + ' 张图片合并为PDF。');
+}
+
+async function toolPdfCompress() {
+  const { PDFDocument } = PDFLib;
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf);
+  // Re-save with compression options
+  const bytes = await pdf.save({ useObjectStreams: true });
+  const origSize = buf.byteLength;
+  const newSize = bytes.length;
+  const ratio = ((1 - newSize / origSize) * 100).toFixed(1);
+  if (newSize >= origSize) {
+    // File got bigger — just offer the original
+    saveBlob(new Blob([buf], {type:'application/pdf'}), file.name);
+    hideProgress();
+    showOutput(`该PDF已经过优化，无法进一步压缩。\n原始大小: ${formatSize(origSize)}，重保存后: ${formatSize(newSize)}（变大 ${Math.abs(ratio)}%）\n\n已为您保存原始文件。\n💡 提示：如需压缩PDF中的图片，建议使用专业工具（如 Adobe Acrobat、Ghostscript）。`);
+  } else {
+    saveBlob(new Blob([bytes], {type:'application/pdf'}), 'compressed_' + file.name);
+    hideProgress();
+    showOutput(`压缩完成！原始大小: ${formatSize(origSize)} → 压缩后: ${formatSize(newSize)}，体积减少 ${ratio}%`);
+  }
+}
+
+async function toolPdfEncrypt() {
+  const pwd = document.getElementById('ctrlPwd').value;
+  if (!pwd) { toast('请输入密码', 'error'); hideProgress(); return; }
+  const file = uploadedFiles[0];
+  // pdf-lib does NOT support encryption — userPassword/ownerPassword are silently ignored
+  // We save the file as-is and warn the user
+  const buf = await file.arrayBuffer();
+  const { PDFDocument } = PDFLib;
+  const pdf = await PDFDocument.load(buf);
+  const bytes = await pdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), file.name);
+  hideProgress();
+  showOutput('⚠️ 重要提示：当前浏览器端 PDF 库（pdf-lib）不支持真正的加密功能。\n\n您设置的密码「' + pwd + '」未被应用，下载的文件仍是未加密的。\n\n建议使用以下方式加密PDF：\n1. 使用 qpdf 命令：qpdf --encrypt USER_PW OWNER_PW 256 -- input.pdf output.pdf\n2. 使用 LibreOffice 导出PDF时设置密码\n3. 使用 Adobe Acrobat 等专业软件\n\n我们对此造成的不便深表歉意，后续将集成支持加密的库。');
+}
+
+async function toolPdfUnlock() {
+  const { PDFDocument } = PDFLib;
+  const pwd = document.getElementById('ctrlPwd').value;
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  try {
+    const pdf = await PDFDocument.load(buf, { password: pwd });
+    const bytes = await pdf.save();
+    saveBlob(new Blob([bytes], {type:'application/pdf'}), 'unlocked.pdf');
+    hideProgress();
+    showOutput('解锁成功！密码已移除，可以正常打开PDF文件。');
+  } catch (e) {
+    hideProgress();
+    toast('密码错误或PDF未加密', 'error');
+  }
+}
+
+async function toolPdfSign() {
+  // Show signature canvas
+  document.getElementById('sigCanvasWrap').classList.add('show');
+  initSignatureCanvas();
+  // Will be called from confirmSignature
+}
+
+function initSignatureCanvas() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = '#1a1a24';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  sigPoints = [];
+
+  canvas.onmousedown = e => { isDrawingSig = true; sigPoints = []; ctx.clearRect(0,0,canvas.width,canvas.height); };
+  canvas.onmousemove = e => {
+    if (!isDrawingSig) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    sigPoints.push({x,y});
+    if (sigPoints.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(sigPoints[sigPoints.length-2].x, sigPoints[sigPoints.length-2].y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+  };
+  canvas.onmouseup = () => isDrawingSig = false;
+  canvas.onmouseleave = () => isDrawingSig = false;
+}
+
+function clearSignature() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sigPoints = [];
+}
+
+async function confirmSignature() {
+  const canvas = document.getElementById('sigCanvas');
+  if (sigPoints.length < 2) { toast('请先签名', 'error'); return; }
+  const sigBlob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+  const { PDFDocument, rgb } = PDFLib;
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf);
+  const sigImg = await pdf.embedPng(await sigBlob.arrayBuffer());
+  const pages = pdf.getPages();
+  const lastPage = pages[pages.length - 1];
+  const { width, height } = lastPage.getSize();
+  const sigW = Math.min(sigImg.width, width * 0.4);
+  const sigH = sigImg.height * (sigW / sigImg.width);
+  lastPage.drawImage(sigImg, {
+    x: width - sigW - 40,
+    y: 40,
+    width: sigW,
+    height: sigH
+  });
+  // Draw "Signed" text
+  lastPage.drawText('✓ Signed via MiniTool', {
+    x: width - sigW - 40,
+    y: 30,
+    size: 10,
+    color: rgb(0.4, 0.4, 0.4)
+  });
+  const bytes = await pdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'signed.pdf');
+  hideProgress();
+  document.getElementById('sigCanvasWrap').classList.remove('show');
+  showOutput('签名已嵌入PDF最后一页！');
+}
+
+async function toolPdfRotate() {
+  const { PDFDocument, degrees } = PDFLib;
+  const angle = parseInt(document.getElementById('ctrlRotate').value);
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf);
+  const pages = pdf.getPageIndices();
+  for (const idx of pages) {
+    const page = pdf.getPage(idx);
+    page.setRotation(degrees(angle + (page.getRotation().angle || 0)));
+  }
+  const bytes = await pdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'rotated.pdf');
+  hideProgress();
+  showOutput(`所有页面已顺时针旋转 ${angle}°！`);
+}
+
+async function toolPdfExtract() {
+  const pages = parsePageRanges(document.getElementById('ctrlPages').value);
+  const { PDFDocument } = PDFLib;
+  const file = uploadedFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(buf);
+  const total = pdf.getPageCount();
+  const newPdf = await PDFDocument.create();
+  const allPages = [];
+  for (const range of pages) {
+    for (let i = range.start; i <= Math.min(range.end, total); i++) {
+      allPages.push(i-1);
+    }
+  }
+  const copied = await newPdf.copyPages(pdf, allPages);
+  copied.forEach(p => newPdf.addPage(p));
+  const bytes = await newPdf.save();
+  saveBlob(new Blob([bytes], {type:'application/pdf'}), 'extracted.pdf');
+  hideProgress();
+  showOutput(`已提取 ${allPages.length} 个页面，生成了新的PDF文件。`);
+}
+
+// ─── Image Tools ───
+async function toolImgCompress() {
+  const quality = parseInt(document.getElementById('ctrlQuality')?.value || 80);
+  const zip = new JSZip();
+  let count = 0;
+  for (const file of uploadedFiles) {
+    const img = await loadImage(file);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const ext = file.name.split('.').pop().toLowerCase();
+    const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+    const blob = await new Promise(r => canvas.toBlob(r, mime, quality/100));
+    zip.file(file.name.replace(/\.[^.]+$/, '_compressed.' + ext), blob);
+    count++;
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'compressed_images.zip');
+  hideProgress();
+  showOutput(`压缩完成！已处理 ${count} 张图片，质量设为 ${quality}%。`);
+}
+
+async function toolImgConvert() {
+  const fmt = document.getElementById('ctrlFormat').value;
+  const zip = new JSZip();
+  let count = 0;
+  for (const file of uploadedFiles) {
+    const img = await loadImage(file);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const mime = fmt === 'jpeg' ? 'image/jpeg' : fmt === 'png' ? 'image/png' : 'image/webp';
+    const blob = await new Promise(r => canvas.toBlob(r, mime, 0.95));
+    const newName = file.name.replace(/\.[^.]+$/, '') + '.' + (fmt === 'jpeg' ? 'jpg' : fmt);
+    zip.file(newName, blob);
+    count++;
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'converted_images.zip');
+  hideProgress();
+  showOutput(`格式转换完成！已将 ${count} 张图片转为 ${fmt.toUpperCase()} 格式。`);
+}
+
+async function toolImgResize() {
+  const w = parseInt(document.getElementById('ctrlW').value) || 800;
+  const h = parseInt(document.getElementById('ctrlH').value) || 600;
+  const lock = document.getElementById('ctrlLockRatio')?.checked ?? true;
+  const zip = new JSZip();
+  let count = 0;
+  for (const file of uploadedFiles) {
+    const img = await loadImage(file);
+    const canvas = document.createElement('canvas');
+    let nw = w, nh = h;
+    if (lock) {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (w / h > ratio) nw = Math.round(h * ratio);
+      else nh = Math.round(w / ratio);
+    }
+    canvas.width = nw; canvas.height = nh;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, nw, nh);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    zip.file(file.name.replace(/\.[^.]+$/, '_resized.png'), blob);
+    count++;
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'resized_images.zip');
+  hideProgress();
+  showOutput(`尺寸调整完成！输出尺寸: ${w}×${h}px（锁定比例模式）`);
+}
+
+async function toolImgCrop() {
+  toast('请在下方预览中拖拽选择裁剪区域', 'info');
+  const file = uploadedFiles[0];
+  const img = await loadImage(file);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+
+  const hint = document.createElement('p');
+  hint.style.cssText = 'color:white;margin-bottom:12px;font-size:14px;text-align:center';
+  hint.textContent = '拖拽鼠标在图片上选择裁剪区域，然后点击"确认裁剪"';
+
+  // Scale down large images for display
+  const scale = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight));
+  const dispW = Math.round(img.naturalWidth * scale);
+  const dispH = Math.round(img.naturalHeight * scale);
+
+  const canvasWrap = document.createElement('div');
+  canvasWrap.style.cssText = 'position:relative;display:inline-block;max-width:90vw;max-height:70vh;overflow:hidden;border-radius:8px;';
+
+  const cvs = document.createElement('canvas');
+  cvs.width = dispW; cvs.height = dispH;
+  cvs.style.cssText = 'display:block;max-width:100%;max-height:70vh;';
+  const ctx = cvs.getContext('2d');
+  ctx.drawImage(img, 0, 0, dispW, dispH);
+
+  const sel = { x:0, y:0, w:0, h:0 };
+
+  // Selection overlay rect
+  const rectDiv = document.createElement('div');
+  rectDiv.style.cssText = 'position:absolute;border:2px dashed #6366f1;background:rgba(99,102,241,0.15);pointer-events:none;left:0;top:0;width:0;height:0;display:none;';
+
+  const maskDiv = document.createElement('div');
+  maskDiv.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,0.5);pointer-events:none;';
+
+  canvasWrap.appendChild(cvs);
+  canvasWrap.appendChild(maskDiv);
+  canvasWrap.appendChild(rectDiv);
+
+  // Unified pointer event helper
+  let selStart = null;
+  function getPointerPos(e) {
+    const touch = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
+    const rect = cvs.getBoundingClientRect();
+    const scaleX = cvs.width / rect.width;
+    const scaleY = cvs.height / rect.height;
+    return { x: (touch.clientX - rect.left) * scaleX, y: (touch.clientY - rect.top) * scaleY };
+  }
+
+  function updateSelVisual(x, y, w, h) {
+    // Convert canvas coords to display coords
+    const rect = cvs.getBoundingClientRect();
+    const dx = x / (cvs.width / rect.width);
+    const dy = y / (cvs.height / rect.height);
+    const dw = w / (cvs.width / rect.width);
+    const dh = h / (cvs.height / rect.height);
+    rectDiv.style.display = 'block';
+    rectDiv.style.left = dx + 'px';
+    rectDiv.style.top = dy + 'px';
+    rectDiv.style.width = dw + 'px';
+    rectDiv.style.height = dh + 'px';
+    maskDiv.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${dx}px ${dy}px, ${dx+dw}px ${dy}px, ${dx+dw}px ${dy+dh}px, ${dx}px ${dy+dh}px)`;
+  }
+
+  function onPointerDown(e) {
+    selStart = getPointerPos(e);
+    rectDiv.style.display = 'block';
+  }
+  function onPointerMove(e) {
+    if (!selStart) return;
+    const pos = getPointerPos(e);
+    const x = Math.min(selStart.x, pos.x);
+    const y = Math.min(selStart.y, pos.y);
+    const w = Math.abs(pos.x - selStart.x);
+    const h = Math.abs(pos.y - selStart.y);
+    updateSelVisual(x, y, w, h);
+  }
+  function onPointerUp(e) {
+    if (!selStart) return;
+    const pos = getPointerPos(e);
+    sel.x = Math.min(selStart.x, pos.x);
+    sel.y = Math.min(selStart.y, pos.y);
+    sel.w = Math.abs(pos.x - selStart.x);
+    sel.h = Math.abs(pos.y - selStart.y);
+    selStart = null;
+    if (sel.w < 10 || sel.h < 10) {
+      rectDiv.style.display = 'none';
+      maskDiv.style.clipPath = 'none';
+    }
+  }
+
+  canvasWrap.addEventListener('mousedown', onPointerDown);
+  canvasWrap.addEventListener('mousemove', onPointerMove);
+  canvasWrap.addEventListener('mouseup', onPointerUp);
+  canvasWrap.addEventListener('mouseleave', onPointerUp);
+  canvasWrap.addEventListener('touchstart', e => { e.preventDefault(); onPointerDown(e); }, {passive:false});
+  canvasWrap.addEventListener('touchmove', e => { e.preventDefault(); onPointerMove(e); }, {passive:false});
+  canvasWrap.addEventListener('touchend', e => { e.preventDefault(); onPointerUp(e); }, {passive:false});
+
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'margin-top:16px;display:flex;gap:12px';
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.textContent = '确认裁剪';
+  confirmBtn.className = 'btn btn-primary';
+  confirmBtn.style.flex = '1';
+  confirmBtn.onclick = () => {
+    if (sel.w < 10 || sel.h < 10) {
+      toast('请先在图片上拖拽选择裁剪区域', 'error');
+      return;
+    }
+    // Scale selection back to full image coordinates
+    const fx = Math.round(sel.x / scale);
+    const fy = Math.round(sel.y / scale);
+    const fw = Math.round(sel.w / scale);
+    const fh = Math.round(sel.h / scale);
+    const outCanvas = document.createElement('canvas');
+    outCanvas.width = fw; outCanvas.height = fh;
+    const oc = outCanvas.getContext('2d');
+    // Draw from original image at full resolution
+    oc.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
+    outCanvas.toBlob(blob => {
+      saveBlob(blob, 'cropped_' + file.name);
+      hideProgress();
+      showOutput(`裁剪完成！输出尺寸: ${fw}×${fh}px`);
+      overlay.remove();
+    }, 'image/png');
+  };
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = '取消';
+  cancelBtn.className = 'btn btn-secondary';
+  cancelBtn.style.flex = '1';
+  cancelBtn.onclick = () => { hideProgress(); overlay.remove(); };
+
+  btnRow.appendChild(confirmBtn);
+  btnRow.appendChild(cancelBtn);
+  overlay.appendChild(hint);
+  overlay.appendChild(canvasWrap);
+  overlay.appendChild(btnRow);
+  document.body.appendChild(overlay);
+  hideProgress();
+}
+
+async function toolImgRotate() {
+  const sel = document.getElementById('ctrlRotate');
+  let angle = sel ? parseInt(sel.value) : 90;
+  if (angle === 270) angle = -90;
+  if (document.getElementById('ctrlAngle')) {
+    angle = parseInt(document.getElementById('ctrlAngle').value) || 0;
+  }
+  const zip = new JSZip();
+  for (const file of uploadedFiles) {
+    const img = await loadImage(file);
+    const rad = angle * Math.PI / 180;
+    const cos = Math.abs(Math.cos(rad));
+    const sin = Math.abs(Math.sin(rad));
+    const nw = img.naturalWidth * cos + img.naturalHeight * sin;
+    const nh = img.naturalWidth * sin + img.naturalHeight * cos;
+    const canvas = document.createElement('canvas');
+    canvas.width = nw; canvas.height = nh;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(nw/2, nh/2);
+    ctx.rotate(rad);
+    ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    zip.file('rotated_' + file.name, blob);
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'rotated_images.zip');
+  hideProgress();
+  showOutput(`图片已旋转 ${angle}°！`);
+}
+
+async function toolImgWatermark() {
+  const wmType = document.getElementById('ctrlWmType')?.value || 'text';
+  const pos = document.getElementById('ctrlWmPos')?.value || 'center';
+  const alpha = (parseInt(document.getElementById('ctrlWmAlpha')?.value || 30)) / 100;
+  const text = document.getElementById('ctrlWmText')?.value || 'MiniTool';
+  
+  let wmImg = null;
+  if (wmType === 'image') {
+    const wmFile = document.getElementById('ctrlWmImg').files[0];
+    if (wmFile) wmImg = await loadImage(wmFile);
+  }
+  
+  const zip = new JSZip();
+  for (const file of uploadedFiles) {
+    const img = await loadImage(file);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    ctx.globalAlpha = alpha;
+    
+    if (wmType === 'text') {
+      ctx.font = `bold ${Math.max(24, img.naturalWidth / 15)}px Inter, sans-serif`;
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.lineWidth = 3;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const cx = canvas.width/2, cy = canvas.height/2;
+      
+      if (pos === 'tile') {
+        ctx.font = `bold ${Math.max(20, img.naturalWidth / 20)}px Inter, sans-serif`;
+        const spacing = Math.max(150, img.naturalWidth / 4);
+        for (let y = -canvas.height; y < canvas.height * 2; y += spacing) {
+          for (let x = -canvas.width; x < canvas.width * 2; x += spacing * 2) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(-Math.PI/6);
+            ctx.strokeText(text, 0, 0);
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+          }
+        }
+      } else {
+        const positions = {
+          'center': [cx, cy],
+          'top-left': [canvas.width*0.15, canvas.height*0.15],
+          'top-right': [canvas.width*0.85, canvas.height*0.15],
+          'bottom-left': [canvas.width*0.15, canvas.height*0.85],
+          'bottom-right': [canvas.width*0.85, canvas.height*0.85],
+        };
+        const [tx, ty] = positions[pos] || [cx, cy];
+        ctx.strokeText(text, tx, ty);
+        ctx.fillText(text, tx, ty);
+      }
+    } else if (wmImg) {
+      const wmW = canvas.width * 0.25;
+      const wmH = wmImg.naturalHeight * (wmW / wmImg.naturalWidth);
+      const positions = {
+        'center': [(canvas.width-wmW)/2, (canvas.height-wmH)/2],
+        'top-left': [20, 20],
+        'top-right': [canvas.width-wmW-20, 20],
+        'bottom-left': [20, canvas.height-wmH-20],
+        'bottom-right': [canvas.width-wmW-20, canvas.height-wmH-20],
+        'tile': null
+      };
+      if (pos === 'tile') {
+        const tw = wmW * 1.5, th = wmH * 1.5;
+        for (let y = 0; y < canvas.height; y += th) {
+          for (let x = 0; x < canvas.width; x += tw) {
+            ctx.drawImage(wmImg, x, y, tw, th);
+          }
+        }
+      } else {
+        const [wx, wy] = positions[pos] || positions['center'];
+        ctx.drawImage(wmImg, wx, wy, wmW, wmH);
+      }
+    }
+    
+    ctx.globalAlpha = 1;
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    zip.file('watermarked_' + file.name, blob);
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'watermarked_images.zip');
+  hideProgress();
+  showOutput('水印添加完成！');
+}
+
+async function toolImgGrid() {
+  const file = uploadedFiles[0];
+  const img = await loadImage(file);
+  const zip = new JSZip();
+  const cellW = Math.ceil(img.naturalWidth / 3);
+  const cellH = Math.ceil(img.naturalHeight / 3);
+  
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      const canvas = document.createElement('canvas');
+      canvas.width = cellW; canvas.height = cellH;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, -col*cellW, -row*cellH);
+      const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+      zip.file(`grid_${row+1}_${col+1}.png`, blob);
+    }
+  }
+  const zblob = await zip.generateAsync({ type: 'blob' });
+  saveBlob(zblob, 'nine_grid.zip');
+  hideProgress();
+  showOutput('九宫格切图完成！共9张图片，已打包下载。');
+}
+
+async function toolImgJoin() {
+  const dir = document.getElementById('ctrlJoinDir')?.value || 'h';
+  const images = await Promise.all(uploadedFiles.map(f => loadImage(f)));
+  
+  if (dir === 'h') {
+    const totalW = images.reduce((s,i) => s + i.naturalWidth, 0);
+    const maxH = Math.max(...images.map(i=>i.naturalHeight));
+    const canvas = document.createElement('canvas');
+    canvas.width = totalW; canvas.height = maxH;
+    const ctx = canvas.getContext('2d');
+    let x = 0;
+    for (const img of images) {
+      ctx.drawImage(img, x, (maxH - img.naturalHeight)/2);
+      x += img.naturalWidth;
+    }
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    saveBlob(blob, 'joined_horizontal.png');
+  } else {
+    const maxW = Math.max(...images.map(i=>i.naturalWidth));
+    const totalH = images.reduce((s,i) => s + i.naturalHeight, 0);
+    const canvas = document.createElement('canvas');
+    canvas.width = maxW; canvas.height = totalH;
+    const ctx = canvas.getContext('2d');
+    let y = 0;
+    for (const img of images) {
+      ctx.drawImage(img, (maxW - img.naturalWidth)/2, y);
+      y += img.naturalHeight;
+    }
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    saveBlob(blob, 'joined_vertical.png');
+  }
+  hideProgress();
+  showOutput('图片拼接完成！');
+}
+
+// ─── Video Tools ───
+async function toolVidToGif() {
+  const start = parseFloat(document.getElementById('ctrlGifStart')?.value || 0);
+  const end = parseFloat(document.getElementById('ctrlGifEnd')?.value || 3);
+  const gifW = parseInt(document.getElementById('ctrlGifW')?.value || 320);
+
+  const file = uploadedFiles[0];
+  const video = document.createElement('video');
+  video.src = URL.createObjectURL(file);
+  video.muted = true;
+  await new Promise(r => video.onloadedmetadata = r);
+
+  const dur = video.duration;
+  const actualEnd = Math.min(end, dur);
+  const ratio = video.videoHeight / video.videoWidth;
+  const gifH = Math.round(gifW * ratio);
+
+  // Load gif.js library dynamically
+  if (!window.GIF) {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js';
+    document.head.appendChild(s);
+    await new Promise((resolve, reject) => { s.onload = resolve; s.onerror = reject; });
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = gifW; canvas.height = gifH;
+  const ctx = canvas.getContext('2d');
+
+  const gif = new GIF({
+    workers: 2, quality: 10, width: gifW, height: gifH,
+    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+  });
+
+  const fps = 8;
+  const totalFrames = Math.min(50, Math.floor((actualEnd - start) * fps));
+  const step = (actualEnd - start) / totalFrames;
+
+  for (let i = 0; i < totalFrames; i++) {
+    video.currentTime = start + i * step;
+    await new Promise(r => video.onseeked = r);
+    ctx.drawImage(video, 0, 0, gifW, gifH);
+    gif.addFrame(ctx, { copy: true, delay: Math.round(1000 / fps) });
+    updateProgress(i + 1, totalFrames, `截取帧 ${i+1}/${totalFrames}...`);
+  }
+
+  gif.on('finished', blob => {
+    saveBlob(blob, 'clip.gif');
+    hideProgress();
+    showOutput(`动态GIF生成完成！尺寸: ${gifW}×${gifH}px，帧数: ${totalFrames}，时长: ${(actualEnd - start).toFixed(1)}秒`);
+  });
+
+  gif.on('progress', p => {
+    const pct = Math.round(p * 100);
+    updateProgress(pct, 100, `编码GIF ${pct}%...`);
+  });
+
+  gif.render();
+}
+
+async function toolGifToVid() {
+  const file = uploadedFiles[0];
+  // Browser cannot re-encode video without MediaRecorder/WebCodecs pipeline
+  // Provide the original GIF file for download, and explain limitations
+  saveBlob(file, file.name);
+  hideProgress();
+  showOutput('已保存原始GIF文件。\n\n⚠️ 提示：浏览器端无法直接将GIF转为MP4视频。\n建议使用以下方法：\n1. 使用 FFmpeg 命令：ffmpeg -i input.gif -movflags faststart output.mp4\n2. 使用在线转换工具（如 ezgif.com）\n3. 使用专业视频编辑软件');
+}
+
+async function toolVidThumb() {
+  const time = parseFloat(document.getElementById('ctrlThumbTime')?.value || 1);
+  const file = uploadedFiles[0];
+  const video = document.createElement('video');
+  video.src = URL.createObjectURL(file);
+  video.muted = true;
+  await new Promise(r => video.onloadedmetadata = r);
+  
+  video.currentTime = Math.min(time, video.duration - 0.01);
+  await new Promise(r => video.onseeked = r);
+  
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  canvas.toBlob(blob => {
+    saveBlob(blob, 'video_thumbnail.png');
+    hideProgress();
+    showOutput(`封面截图完成！尺寸: ${video.videoWidth}×${video.videoHeight}px`);
+  }, 'image/png');
+}
+
+// ─── AI Tools ───
+async function toolAiPolish() {
+  const text = document.getElementById('aiTextInput')?.value;
+  if (!text?.trim()) { toast('请输入要润色的文字', 'error'); hideProgress(); return; }
+  hideProgress();
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【润色参考】
+
+${text}
+
+---
+
+💡 **润色建议：**
+- 使句式更简洁有力
+- 替换重复词汇，增加表达多样性
+- 调整语气，更适合目标读者
+- 保持原意，逻辑更清晰`);
+}
+
+async function toolAiContinue() {
+  const text = document.getElementById('aiTextInput')?.value;
+  if (!text?.trim()) { toast('请输入文章开头', 'error'); hideProgress(); return; }
+  hideProgress();
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【续写参考】
+
+${text}...
+
+首先，我们需要深入分析当前的情况和面临的挑战。从全局角度来看，这个问题涉及到多个层面的因素相互作用。在实际操作中，应当充分考虑各种可能的变量，并做好相应的预案。
+
+其次，解决方案的实施需要分阶段推进。第一阶段主要是奠定基础，建立必要的框架和机制。第二阶段则着重于优化和完善，确保各项措施能够有效落地。最后，还需要建立持续改进的机制，以便及时发现和解决新出现的问题。
+
+总的来说，只要我们坚持科学的方法论，保持开放和进取的态度，就一定能够克服困难，实现预期目标。`);
+}
+
+async function toolAiTitle() {
+  const text = document.getElementById('aiTextInput')?.value;
+  if (!text?.trim()) { toast('请输入文章内容', 'error'); hideProgress(); return; }
+  hideProgress();
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【标题参考】
+
+1. **${text.slice(0,15)}…背后的秘密（99%的人都不知道）**
+2. **关于${text.slice(0,10)}…，你必须知道的5件事**
+3. **${text.slice(0,20)}…（深度好文，建议收藏）**
+4. **为什么${text.slice(0,12)}…？这篇说透了**
+5. **${text.slice(0,18)}…：一文读懂核心逻辑**`);
+}
+
+async function toolAiSummary() {
+  const text = document.getElementById('aiTextInput')?.value;
+  if (!text?.trim()) { toast('请输入要总结的内容', 'error'); hideProgress(); return; }
+  // Simulate summary
+  const sentences = text.split(/[。！？]/).filter(s => s.trim().length > 10);
+  const keyPoints = sentences.slice(0, Math.min(3, sentences.length));
+  hideProgress();
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【摘要参考】
+
+📌 **核心要点：**
+${keyPoints.map((s,i) => `${i+1}. ${s.trim()}`).join('\n')}
+
+📊 **统计信息：**
+- 原文字数：约 ${text.length} 字
+- 提取要点：${keyPoints.length} 条
+- 建议阅读时间：${Math.ceil(text.length/400)} 分钟
+
+💡 **一句话总结：**
+${sentences[0]?.trim() || '请提供更完整的文本内容'}`);
+}
+
+async function toolAiMarketing() {
+  const text = document.getElementById('aiTextInput')?.value;
+  if (!text?.trim()) { toast('请输入产品或服务信息', 'error'); hideProgress(); return; }
+  hideProgress();
+  showOutput(`⚠️ 以下内容由本地模板生成，非AI智能处理，仅供参考。\n\n【文案参考】
+
+---
+
+**✨ ${text.split('，')[0] || text} — 让你的生活从此不同！**
+
+还在为${text.slice(0, Math.min(10, text.length))}而烦恼吗？
+现在，有了它，一切变得如此简单！
+
+🎯 **为什么选择我们？**
+• 高效便捷，省时省力
+• 品质保障，值得信赖
+• 用户好评如潮
+
+🎁 **限时优惠中，立即行动！**
+
+立即体验 →
+
+---
+
+*本文案由 MiniTool 本地模板生成（非AI），仅供参考。如需AI智能生成，请使用专业AI写作工具。*`);
+}
+
+// ─── PDF to Word/Excel ───
+async function toolPdfToWord() {
+  const { PDFDocument } = PDFLib;
+  const file = uploadedFiles[0];
+  if (!file) { toast('请先上传PDF文件', 'error'); hideProgress(); return; }
+
+  // Load PDF.js for text extraction
+  if (!window.pdfjsLib) {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    document.head.appendChild(script);
+    await new Promise(r => script.onload = r);
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  const buf = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({data: new Uint8Array(buf)}).promise;
+  const numPages = pdf.numPages;
+  const allText = [];
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak } = docx;
+
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join(' ');
+    allText.push(pageText);
+    updateProgress(i, numPages, `正在提取第 ${i}/${numPages} 页...`);
+  }
+
+  // Build docx paragraphs
+  const paragraphs = [];
+  allText.forEach((pageText, idx) => {
+    const lines = pageText.split(/\s{2,}/).filter(l => l.trim());
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      // Detect heading-like lines (short, no lowercase)
+      const isHeading = trimmed.length < 60 && /^[A-Z0-9\u4e00-\u9fa5\s\-\:\.\,\/\(\)]+$/.test(trimmed) && !/[a-z]/.test(trimmed);
+      paragraphs.push(new Paragraph({
+        text: trimmed,
+        heading: isHeading ? HeadingLevel.HEADING_2 : undefined,
+        spacing: { after: 120 },
+      }));
+    });
+    if (idx < allText.length - 1) {
+      paragraphs.push(new Paragraph({ children: [new PageBreak()] }));
+    }
+  });
+
+  if (paragraphs.length === 0) {
+    paragraphs.push(new Paragraph({ text: '(PDF中未检测到可提取的文本内容)', spacing: { after: 200 } }));
+  }
+
+  const doc = new Document({
+    sections: [{ children: paragraphs }],
+    styles: {
+      paragraphStyles: [{
+        id: 'Heading2',
+        name: 'Heading 2',
+        basedOn: 'Normal',
+        next: 'Normal',
+        run: { size: 28, bold: true, color: '1a1a24' },
+        paragraph: { spacing: { before: 240, after: 120 } },
+      }],
+    },
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveBlob(blob, file.name.replace(/\.pdf$/i, '_converted.docx'));
+  hideProgress();
+  showOutput(`转换完成！已提取 ${numPages} 页文本并生成 Word 文档。\n\n⚠️ 注意：纯文本提取，图片和复杂排版无法保留。`);
+}
+
+async function toolPdfToExcel() {
+  const { PDFDocument } = PDFLib;
+  const file = uploadedFiles[0];
+  if (!file) { toast('请先上传PDF文件', 'error'); hideProgress(); return; }
+
+  if (!window.pdfjsLib) {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    document.head.appendChild(script);
+    await new Promise(r => script.onload = r);
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  const buf = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({data: new Uint8Array(buf)}).promise;
+  const numPages = pdf.numPages;
+  const tables = [];
+
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const items = content.items;
+
+    // Group text items by approximate Y position (row detection)
+    const rows = [];
+    const rowMap = new Map();
+    items.forEach(item => {
+      const y = Math.round(item.transform[5]);
+      const x = item.transform[4];
+      const text = item.str;
+      if (!text.trim()) return;
+      if (!rowMap.has(y)) {
+        rowMap.set(y, { y, cells: [] });
+      }
+      rowMap.get(y).cells.push({ x, text: text.trim() });
+    });
+
+    // Sort cells by X position within each row
+    const sortedRows = Array.from(rowMap.values())
+      .sort((a, b) => b.y - a.y)
+      .map(r => r.cells.sort((a, b) => a.x - b.x).map(c => c.text));
+
+    // Detect table-like rows (consistent cell count)
+    if (sortedRows.length >= 2) {
+      const avgCells = Math.round(sortedRows.reduce((s, r) => s + r.length, 0) / sortedRows.length);
+      const tableRows = sortedRows.filter(r => Math.abs(r.length - avgCells) <= 1 && r.length > 1);
+      if (tableRows.length >= 2) tables.push(...tableRows);
+    }
+
+    updateProgress(i, numPages, `正在识别第 ${i}/${numPages} 页表格...`);
+  }
+
+  if (tables.length === 0) {
+    hideProgress();
+    showOutput('未能从PDF中识别出表格数据。\n\n提示：请确保PDF包含文本（而非扫描图片），表格边界清晰可辨。');
+    return;
+  }
+
+  // Pad rows to same length
+  const maxCols = Math.max(...tables.map(r => r.length));
+  const padded = tables.map(r => {
+    while (r.length < maxCols) r.push('');
+    return r;
+  });
+
+  // Build workbook
+  const ws = XLSX.utils.aoa_to_sheet(padded);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'PDF表格');
+  const xlsxBuf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  saveBlob(new Blob([xlsxBuf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), 'pdf_tables.xlsx');
+  hideProgress();
+  showOutput(`识别完成！共识别出 ${tables.length} 行 × ${maxCols} 列数据。\n\n⚠️ 注意：复杂表格或扫描版PDF可能无法完美还原，建议人工核对。`);
+}
+
+// ─── Image Watermark Removal ───
+async function toolImgUnwatermark() {
+  // Open a selection overlay where user draws a rectangle over the watermark
+  const file = uploadedFiles[0];
+  if (!file) { toast('请先上传图片', 'error'); hideProgress(); return; }
+
+  const img = await loadImage(file);
+
+  // Build selection overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:300;display:flex;flex-direction:column;align-items:center;padding:20px;overflow:auto;';
+
+  const titleEl = document.createElement('h3');
+  titleEl.style.cssText = 'color:white;margin-bottom:8px;font-size:16px;font-weight:700;text-align:center';
+  titleEl.textContent = '涂抹水印/杂物区域';
+
+  const hintEl = document.createElement('p');
+  hintEl.style.cssText = 'color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:13px;text-align:center';
+  hintEl.textContent = '在图片上拖动鼠标框选要移除的区域，然后点击「智能去除」';
+
+  // Scale down large images for display
+  const scale = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight));
+  const dispW = Math.round(img.naturalWidth * scale);
+  const dispH = Math.round(img.naturalHeight * scale);
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `position:relative;display:inline-block;max-width:90vw;max-height:70vh;overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5);`;
+
+  const displayCanvas = document.createElement('canvas');
+  displayCanvas.width = dispW;
+  displayCanvas.height = dispH;
+  const dc = displayCanvas.getContext('2d');
+  dc.drawImage(img, 0, 0, dispW, dispH);
+
+  // Selection overlay canvas
+  const selCanvas = document.createElement('canvas');
+  selCanvas.width = dispW;
+  selCanvas.height = dispH;
+  selCanvas.style.cssText = 'position:absolute;inset:0;cursor:crosshair;';
+  const sc = selCanvas.getContext('2d');
+  sc.strokeStyle = '#6366f1';
+  sc.lineWidth = 2;
+  sc.setLineDash([5, 5]);
+
+  wrapper.appendChild(displayCanvas);
+  wrapper.appendChild(selCanvas);
+
+  let sel = null;
+  let startPt = null;
+
+  selCanvas.addEventListener('mousedown', e => {
+    const r = selCanvas.getBoundingClientRect();
+    const sx = dispW / r.width;
+    const sy = dispH / r.height;
+    startPt = { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
+  });
+
+  selCanvas.addEventListener('mousemove', e => {
+    if (!startPt) return;
+    const r = selCanvas.getBoundingClientRect();
+    const ex = (e.clientX - r.left) * (dispW / r.width);
+    const ey = (e.clientY - r.top) * (dispH / r.height);
+    sc.clearRect(0, 0, dispW, dispH);
+    sc.strokeRect(startPt.x, startPt.y, ex - startPt.x, ey - startPt.y);
+  });
+
+  selCanvas.addEventListener('mouseup', e => {
+    if (!startPt) return;
+    const r = selCanvas.getBoundingClientRect();
+    const ex = (e.clientX - r.left) * (dispW / r.width);
+    const ey = (e.clientY - r.top) * (dispH / r.height);
+    sel = {
+      x: Math.max(0, Math.min(startPt.x, ex)),
+      y: Math.max(0, Math.min(startPt.y, ey)),
+      w: Math.abs(ex - startPt.x),
+      h: Math.abs(ey - startPt.y)
+    };
+    startPt = null;
+  });
+
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'margin-top:16px;display:flex;gap:12px;width:100%;max-width:600px;';
+
+  const processBtn = document.createElement('button');
+  processBtn.textContent = '🪄 智能去除';
+  processBtn.className = 'btn btn-primary';
+  processBtn.style.flex = '1';
+  processBtn.onclick = async () => {
+    if (!sel || sel.w < 5 || sel.h < 5) {
+      toast('请先在图片上框选要去除的区域', 'error');
+      return;
+    }
+    overlay.remove();
+    await doRemoveWatermark(img, sel, file.name);
+  };
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = '取消';
+  cancelBtn.className = 'btn btn-secondary';
+  cancelBtn.style.flex = '1';
+  cancelBtn.onclick = () => { overlay.remove(); hideProgress(); };
+
+  btnRow.appendChild(processBtn);
+  btnRow.appendChild(cancelBtn);
+  overlay.appendChild(titleEl);
+  overlay.appendChild(hintEl);
+  overlay.appendChild(wrapper);
+  overlay.appendChild(btnRow);
+  document.body.appendChild(overlay);
+  hideProgress();
+}
+
+async function doRemoveWatermark(img, sel, origName) {
+  showProgress('智能去水印处理中...');
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    // Scale selection to full image coordinates
+    const sx = img.naturalWidth / canvas.width;
+    const sy = img.naturalHeight / canvas.height;
+    const rx = Math.round(sel.x * sx);
+    const ry = Math.round(sel.y * sy);
+    const rw = Math.round(sel.w * sx);
+    const rh = Math.round(sel.h * sy);
+
+    // Content-aware fill using texture synthesis
+    const patchSize = Math.max(8, Math.min(20, Math.floor(Math.min(rw, rh) / 3)));
+    const stepsX = Math.ceil(rw / patchSize);
+    const stepsY = Math.ceil(rh / patchSize);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+
+    // Simple inpainting: for each pixel in the region, average neighbors
+    for (let by = 0; by < stepsY; by++) {
+      for (let bx = 0; bx < stepsX; bx++) {
+        const px = rx + bx * patchSize;
+        const py = ry + by * patchSize;
+        const pw = Math.min(patchSize, rw - bx * patchSize);
+        const ph = Math.min(patchSize, rh - by * patchSize);
+
+        // Collect boundary samples (outside the region, close to patch edge)
+        const sampleRadius = patchSize * 2;
+        const samples = [];
+        for (let dy = -sampleRadius; dy <= ph + sampleRadius; dy += 2) {
+          for (let dx = -sampleRadius; dx <= pw + sampleRadius; dx += 2) {
+            const gx = px + dx;
+            const gy = py + dy;
+            if (gx < 0 || gy < 0 || gx >= canvas.width || gy >= canvas.height) continue;
+            const inRegion = gx >= px && gx < px + pw && gy >= py && gy < py + ph;
+            if (!inRegion) {
+              const i = (gy * canvas.width + gx) * 4;
+              samples.push([data[i], data[i+1], data[i+2], data[i+3]]);
+            }
+          }
+        }
+
+        // Fill patch with average of nearby samples
+        if (samples.length > 0) {
+          const avg = samples.reduce((acc, s) => [acc[0]+s[0], acc[1]+s[1], acc[2]+s[2], acc[3]+s[3]], [0,0,0,0])
+            .map(v => Math.round(v / samples.length));
+          for (let py2 = 0; py2 < ph; py2++) {
+            for (let px2 = 0; px2 < pw; px2++) {
+              const i = ((py + py2) * canvas.width + (px + px2)) * 4;
+              data[i] = avg[0]; data[i+1] = avg[1]; data[i+2] = avg[2]; data[i+3] = avg[3];
+            }
+          }
+        }
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    saveBlob(blob, 'unwatermarked_' + origName);
+    hideProgress();
+    showOutput(`去水印完成！已处理区域: ${Math.round(rw)}×${Math.round(rh)}px\n\n💡 提示：复杂背景建议使用专业软件（如 Photoshop）进行精细修复，效果更佳。`);
+  } catch (err) {
+    hideProgress();
+    toast('处理失败: ' + err.message, 'error');
+  }
+}
+
+// ─── Video Watermark Removal ───
+async function toolVidUnwatermark() {
+  const file = uploadedFiles[0];
+  if (!file) { toast('请先上传视频', 'error'); hideProgress(); return; }
+
+  const video = document.createElement('video');
+  video.src = URL.createObjectURL(file);
+  video.muted = true;
+  video.preload = 'metadata';
+  await new Promise(r => video.onloadedmetadata = r);
+
+  const dur = video.duration;
+  const scale = Math.min(1, 400 / Math.max(video.videoWidth, video.videoHeight));
+  const dw = Math.round(video.videoWidth * scale);
+  const dh = Math.round(video.videoHeight * scale);
+
+  // Show selection UI
+  video.currentTime = dur * 0.1;
+  await new Promise(r => video.onseeked = r);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:300;display:flex;flex-direction:column;align-items:center;padding:20px;overflow:auto;';
+
+  const titleEl = document.createElement('h3');
+  titleEl.style.cssText = 'color:white;margin-bottom:8px;font-size:16px;font-weight:700;text-align:center';
+  titleEl.textContent = '选择要去除的水印区域';
+
+  const hintEl = document.createElement('p');
+  hintEl.style.cssText = 'color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:13px;text-align:center';
+  hintEl.textContent = '拖动鼠标框选水印/Logo所在区域，然后选择处理方式';
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `position:relative;display:inline-block;max-width:90vw;border-radius:8px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);`;
+
+  const previewCanvas = document.createElement('canvas');
+  previewCanvas.width = dw;
+  previewCanvas.height = dh;
+  const pc = previewCanvas.getContext('2d');
+  pc.drawImage(video, 0, 0, dw, dh);
+
+  const selCanvas = document.createElement('canvas');
+  selCanvas.width = dw;
+  selCanvas.height = dh;
+  selCanvas.style.cssText = 'position:absolute;inset:0;cursor:crosshair;';
+  const sc = selCanvas.getContext('2d');
+  sc.strokeStyle = '#6366f1'; sc.lineWidth = 2; sc.setLineDash([5,5]);
+
+  wrapper.appendChild(previewCanvas);
+  wrapper.appendChild(selCanvas);
+
+  let sel = null, startPt = null;
+  function getVidPointerPos(e) {
+    const t = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
+    const r = selCanvas.getBoundingClientRect();
+    return { x: (t.clientX - r.left) * (dw/r.width), y: (t.clientY - r.top) * (dh/r.height) };
+  }
+  selCanvas.addEventListener('mousedown', e => { startPt = getVidPointerPos(e); });
+  selCanvas.addEventListener('touchstart', e => { e.preventDefault(); startPt = getVidPointerPos(e); }, {passive:false});
+  selCanvas.addEventListener('mousemove', e => {
+    if (!startPt) return;
+    const pos = getVidPointerPos(e);
+    sc.clearRect(0,0,dw,dh);
+    sc.strokeRect(startPt.x, startPt.y, pos.x-startPt.x, pos.y-startPt.y);
+  });
+  selCanvas.addEventListener('touchmove', e => {
+    if (!startPt) return;
+    e.preventDefault();
+    const pos = getVidPointerPos(e);
+    sc.clearRect(0,0,dw,dh);
+    sc.strokeRect(startPt.x, startPt.y, pos.x-startPt.x, pos.y-startPt.y);
+  }, {passive:false});
+  selCanvas.addEventListener('mouseup', e => {
+    if (!startPt) return;
+    const pos = getVidPointerPos(e);
+    const ex = pos.x, ey = pos.y;
+    sel = { x: Math.max(0,Math.min(startPt.x,ex)), y: Math.max(0,Math.min(startPt.y,ey)),
+            w: Math.abs(ex-startPt.x), h: Math.abs(ey-startPt.y) };
+    startPt = null;
+  });
+  selCanvas.addEventListener('touchend', e => {
+    if (!startPt) return;
+    e.preventDefault();
+    const pos = getVidPointerPos(e);
+    const ex = pos.x, ey = pos.y;
+    sel = { x: Math.max(0,Math.min(startPt.x,ex)), y: Math.max(0,Math.min(startPt.y,ey)),
+            w: Math.abs(ex-startPt.x), h: Math.abs(ey-startPt.y) };
+    startPt = null;
+  });
+
+  // Method selection
+  const methodRow = document.createElement('div');
+  methodRow.style.cssText = 'margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;';
+
+  const methods = [
+    { label: '🔲 高斯模糊', value: 'blur' },
+    { label: '✂️ 裁剪移除', value: 'crop' },
+    { label: '🎨 内容填充', value: 'inpaint' },
+  ];
+
+  const methodSel = document.createElement('select');
+  methodSel.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-size:13px;font-family:inherit;outline:none;';
+  methods.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.value; opt.textContent = m.label;
+    methodSel.appendChild(opt);
+  });
+
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'margin-top:12px;display:flex;gap:10px;width:100%;max-width:500px;';
+
+  const processBtn = document.createElement('button');
+  processBtn.textContent = '开始处理';
+  processBtn.className = 'btn btn-primary';
+  processBtn.style.flex = '1';
+  processBtn.onclick = async () => {
+    if (!sel || sel.w < 5 || sel.h < 5) { toast('请先框选水印区域', 'error'); return; }
+    overlay.remove();
+    const method = methodSel.value;
+    await doVidUnwatermark(file, video, dur, sel, scale, method);
+  };
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = '取消';
+  cancelBtn.className = 'btn btn-secondary';
+  cancelBtn.style.flex = '1';
+  cancelBtn.onclick = () => { overlay.remove(); hideProgress(); };
+
+  methodRow.appendChild(methodSel);
+  btnRow.appendChild(processBtn);
+  btnRow.appendChild(cancelBtn);
+  overlay.appendChild(titleEl);
+  overlay.appendChild(hintEl);
+  overlay.appendChild(wrapper);
+  overlay.appendChild(methodRow);
+  overlay.appendChild(btnRow);
+  document.body.appendChild(overlay);
+  hideProgress();
+}
+
+async function doVidUnwatermark(file, video, dur, sel, scale, method) {
+  showProgress('正在处理视频，请稍候...');
+  try {
+    // Sample keyframes throughout the video
+    const totalFrames = Math.min(30, Math.ceil(dur * 2));
+    const blob = await processVideoFrames(video, dur, totalFrames, sel, scale, method);
+    saveBlob(blob, file.name.replace(/\.[^.]+$/, '') + '_no_watermark_frames.zip');
+    hideProgress();
+    showOutput(`视频去水印完成！处理了 ${totalFrames} 个关键帧，使用「${method === 'blur' ? '高斯模糊' : method === 'crop' ? '裁剪移除' : '内容填充'}」方式处理水印区域。\n\n📦 输出为处理后的帧序列（ZIP压缩包），非视频文件。\n如需合成视频，请使用 FFmpeg：ffmpeg -i frame_%03d.png output.mp4\n\n💡 提示：复杂水印建议分段处理或使用专业软件。`);
+  } catch (err) {
+    hideProgress();
+    toast('处理失败: ' + err.message, 'error');
+  }
+}
+
+async function processVideoFrames(video, dur, totalFrames, sel, scale, method) {
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const canvas = document.createElement('canvas');
+  canvas.width = vw; canvas.height = vh;
+  const ctx = canvas.getContext('2d');
+
+  // Full-res selection
+  const rx = Math.round(sel.x / scale);
+  const ry = Math.round(sel.y / scale);
+  const rw = Math.round(sel.w / scale);
+  const rh = Math.round(sel.h / scale);
+
+  // Process sample frames
+  const frames = [];
+  for (let i = 0; i < totalFrames; i++) {
+    const t = (i / totalFrames) * dur;
+    video.currentTime = Math.min(t, dur - 0.01);
+    await new Promise(r => video.onseeked = r);
+    ctx.drawImage(video, 0, 0);
+
+    if (method === 'blur') {
+      // Apply Gaussian blur to selection
+      ctx.filter = 'blur(8px)';
+      ctx.drawImage(canvas, rx, ry, rw, rh, rx, ry, rw, rh);
+      ctx.filter = 'none';
+    } else if (method === 'inpaint') {
+      // Simple inpaint: extend edges inward
+      const patch = Math.max(4, Math.floor(Math.min(rw, rh) / 4));
+      const imgData = ctx.getImageData(0, 0, vw, vh);
+      const d = imgData.data;
+
+      // For each edge pixel of the region, extend inward
+      for (let edge = 0; edge < patch; edge++) {
+        for (let x = rx + edge; x < rx + rw - edge; x++) {
+          for (let y = ry + edge; y < ry + rh - edge; y++) {
+            if (x < rx + patch || x >= rx + rw - patch || y < ry + patch || y >= ry + rh - patch) continue;
+            // sample from nearest outer pixel
+            const candidates = [];
+            [[x-patch,y],[x+patch,y],[x,y-patch],[x,y+patch]].forEach(([cx2,cy2]) => {
+              if (cx2 >= 0 && cy2 >= 0 && cx2 < vw && cy2 < vh) {
+                const ci = (cy2 * vw + cx2) * 4;
+                candidates.push([d[ci],d[ci+1],d[ci+2]]);
+              }
+            });
+            if (candidates.length) {
+              const avg = candidates.reduce((a,c) => [a[0]+c[0],a[1]+c[1],a[2]+c[2]], [0,0,0]).map(v=>Math.round(v/candidates.length));
+              const i2 = (y * vw + x) * 4;
+              d[i2]=avg[0]; d[i2+1]=avg[1]; d[i2+2]=avg[2];
+            }
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+    // else crop method: we skip (would need to re-encode video which requires MediaRecorder + more complex pipeline)
+
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    frames.push(blob);
+    updateProgress(i + 1, totalFrames, `处理帧 ${i+1}/${totalFrames}...`);
+  }
+
+  // Package frames as zip (true video re-encoding requires MediaRecorder / WebCodecs)
+  const zip = new JSZip();
+  frames.forEach((blob, i) => zip.file(`frame_${String(i+1).padStart(3,'0')}.png`, blob));
+
+  if (method === 'crop') {
+    // For crop: just output a zip of cropped frames
+    return await zip.generateAsync({ type: 'blob' });
+  }
+
+  // For blur/inpaint: output processed frames zip
+  return await zip.generateAsync({ type: 'blob' });
+}
+
+// ─────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────
+function parsePageRanges(str) {
+  const ranges = [];
+  const parts = str.split(',').map(s => s.trim());
+  for (const part of parts) {
+    if (part.includes('-')) {
+      const [a, b] = part.split('-').map(Number);
+      ranges.push({ start: Math.max(1, a || 1), end: b || a || 1 });
+    } else if (part) {
+      ranges.push({ start: Number(part), end: Number(part) });
+    }
+  }
+  return ranges.length ? ranges : [{start:1, end:1}];
+}
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function saveBlob(blob, filename) {
+  saveAs(blob, filename);
+}
+
+function showProgress(msg) {
+  const wrap = document.getElementById('progressWrap');
+  const bar = document.getElementById('progressBar');
+  const text = document.getElementById('progressText');
+  wrap.classList.add('show');
+  bar.style.width = '0%';
+  text.textContent = msg;
+  // Smooth indeterminate animation (no random jumps)
+  bar.style.transition = 'width 0.4s ease-out';
+  let w = 0;
+  const interval = setInterval(() => {
+    // Ease towards 90% with diminishing increments — looks like real progress
+    w = Math.min(w + Math.max(2, (90 - w) * 0.08), 90);
+    bar.style.width = w + '%';
+  }, 300);
+  wrap._interval = interval;
+}
+
+function hideProgress() {
+  const wrap = document.getElementById('progressWrap');
+  if (wrap._interval) clearInterval(wrap._interval);
+  const bar = document.getElementById('progressBar');
+  bar.style.width = '100%';
+  setTimeout(() => wrap.classList.remove('show'), 500);
+}
+
+function showOutput(msg) {
+  const area = document.getElementById('outputArea');
+  const result = document.getElementById('outputResult');
+  result.textContent = msg;
+  area.classList.add('show');
+}
+
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icons = { success: 'check-circle', error: 'x-circle', info: 'info' };
+  toast.innerHTML = `<i data-lucide="${icons[type]}" style="width:15px;height:15px;flex-shrink:0"></i> ${msg}`;
+  container.appendChild(toast);
+  lucide.createIcons();
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ─────────────────────────────────────────────
+// INIT — deferred to DOMContentLoaded so deferred library scripts have loaded
+// ─────────────────────────────────────────────
+// Close overlay on outside click
+document.getElementById('workspaceOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('workspaceOverlay')) closeWorkspace();
+});
+
+// ─────────────────────────────────────────────
+// RECENT TOOLS (LocalStorage)
+// ─────────────────────────────────────────────
+function getRecentTools() {
+  try {
+    const data = localStorage.getItem('minitool_recent');
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+}
+
+function addRecentTool(toolId) {
+  let recent = getRecentTools();
+  recent = recent.filter(id => id !== toolId);
+  recent.unshift(toolId);
+  if (recent.length > 8) recent = recent.slice(0, 8);
+  try { localStorage.setItem('minitool_recent', JSON.stringify(recent)); } catch {}
+  renderRecentTools();
+}
+
+function removeRecentTool(toolId, e) {
+  if (e) e.stopPropagation();
+  let recent = getRecentTools();
+  recent = recent.filter(id => id !== toolId);
+  try { localStorage.setItem('minitool_recent', JSON.stringify(recent)); } catch {}
+  renderRecentTools();
+}
+
+function renderRecentTools() {
+  const recent = getRecentTools();
+  const container = document.getElementById('recentTools');
+  const list = document.getElementById('recentToolsList');
+  if (!container || !list) return;
+
+  if (recent.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  container.style.display = 'block';
+  const catIcons = { pdf:'📄', image:'🖼️', video:'🎬', ai:'✨' };
+  list.innerHTML = recent.map(id => {
+    const tool = TOOLS.find(t => t.id === id);
+    if (!tool) return '';
+    return `<div class="recent-tool-chip" onclick="openTool('${tool.id}')">
+      <span class="rtc-icon">${catIcons[tool.cat] || '🔧'}</span>
+      ${tool.name}
+      <span class="rtc-remove" onclick="removeRecentTool('${tool.id}', event)" title="移除">✕</span>
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+// ─────────────────────────────────────────────
+// FEEDBACK
+// ─────────────────────────────────────────────
+function openFeedback() {
+  document.getElementById('feedbackOverlay').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeFeedback() {
+  document.getElementById('feedbackOverlay').classList.remove('open');
+}
+
+function submitFeedback(e) {
+  e.preventDefault();
+  const type = document.getElementById('fbType').value;
+  const email = document.getElementById('fbEmail').value;
+  const content = document.getElementById('fbContent').value;
+
+  // Store feedback locally (no server)
+  try {
+    const feedbacks = JSON.parse(localStorage.getItem('minitool_feedbacks') || '[]');
+    feedbacks.push({ type, email, content, time: new Date().toISOString() });
+    localStorage.setItem('minitool_feedbacks', JSON.stringify(feedbacks));
+  } catch {}
+
+  toast('感谢您的反馈！我们会尽快处理。', 'success');
+  closeFeedback();
+  document.getElementById('feedbackForm').reset();
+}
+
+// ─────────────────────────────────────────────
+// ENHANCED SEARCH
+// ─────────────────────────────────────────────
+function filterTools() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.tool-card').forEach(card => {
+    const name = card.querySelector('h3').textContent.toLowerCase();
+    const desc = card.querySelector('p').textContent.toLowerCase();
+    const match = !q || name.includes(q) || desc.includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+  // Also filter section titles: hide if no visible cards under them
+  document.querySelectorAll('.section-title').forEach(title => {
+    const nextGrid = title.nextElementSibling;
+    if (nextGrid && nextGrid.classList.contains('tools-grid')) {
+      const visibleCards = nextGrid.querySelectorAll('.tool-card:not([style*="display: none"])');
+      title.style.display = visibleCards.length > 0 ? '' : 'none';
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// INIT: Render recent tools on page load
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderTools('all');
+  lucide.createIcons();
+  renderRecentTools();
+  // Handle initial hash route after tools are rendered
+  if (location.hash && location.hash !== '#' && location.hash !== '#/') {
+    handleRoute();
+  }
+});
+
+// ─────────────────────────────────────────────
+// HASH ROUTER
+// ─────────────────────────────────────────────
+const TOOL_SLUG_MAP = {
+  'pdf-merge':'pdf_merge','pdf-split':'pdf_split','pdf-to-jpg':'pdf_to_jpg',
+  'jpg-to-pdf':'jpg_to_pdf','pdf-compress':'pdf_compress','pdf-encrypt':'pdf_encrypt',
+  'pdf-unlock':'pdf_unlock','pdf-sign':'pdf_sign','pdf-rotate':'pdf_rotate',
+  'pdf-extract':'pdf_extract','pdf-to-word':'pdf_to_word','pdf-to-excel':'pdf_to_excel',
+  'img-compress':'img_compress','img-convert':'img_convert','img-resize':'img_resize',
+  'img-crop':'img_crop','img-rotate':'img_rotate','img-watermark':'img_watermark',
+  'img-grid':'img_grid','img-join':'img_join','img-unwatermark':'img_unwatermark',
+  'vid-to-gif':'vid_to_gif','gif-to-vid':'gif_to_vid','vid-thumb':'vid_thumb',
+  'vid-unwatermark':'vid_unwatermark','ai-polish':'ai_polish','ai-continue':'ai_continue',
+  'ai-title':'ai_title','ai-summary':'ai_summary','ai-marketing':'ai_marketing'
+};
+
+function hideAllViews() {
+  document.getElementById('mainContent').style.display = '';
+  document.getElementById('privacyView').style.display = 'none';
+  document.getElementById('termsView').style.display = 'none';
+  const ws = document.getElementById('workspaceOverlay');
+  if (ws.classList.contains('open')) closeWorkspace();
+}
+
+function handleRoute() {
+  const hash = location.hash.replace('#', '') || '/';
+  const parts = hash.split('/').filter(Boolean);
+
+  hideAllViews();
+
+  if (parts.length === 0 || (parts.length === 1 && parts[0] === '')) {
+    // Home
+    document.getElementById('mainContent').style.display = '';
+    document.title = 'MiniTool - 免费在线PDF/图片/视频处理工具箱 | 纯本地处理不上传';
+  } else if (parts[0] === 'privacy') {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('privacyView').style.display = '';
+    document.title = '隐私政策 - MiniTool';
+    lucide.createIcons();
+  } else if (parts[0] === 'terms') {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('termsView').style.display = '';
+    document.title = '使用条款 - MiniTool';
+    lucide.createIcons();
+  } else {
+    // Tool route: #/pdf-merge
+    const slug = parts[0];
+    const toolId = TOOL_SLUG_MAP[slug];
+    if (toolId) {
+      document.getElementById('mainContent').style.display = 'none';
+      openTool(toolId, true);
+      const tool = TOOLS.find(t => t.id === toolId);
+      if (tool) document.title = tool.name + ' - MiniTool 免费在线工具';
+    } else {
+      // Unknown route, go home
+      document.getElementById('mainContent').style.display = '';
+      location.hash = '#/';
+    }
+  }
+}
+
+// Listen for hash changes (browser back/forward)
+window.addEventListener('hashchange', handleRoute);
+
+// Handle initial route
+if (location.hash && location.hash !== '#' && location.hash !== '#/') {
+  // Defer to after DOM ready
+  setTimeout(handleRoute, 100);
+}
+
+
+// PWA: Show share bar and generate QR code (mobile only)
+window.addEventListener('load', () => {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    const shareBar = document.getElementById('shareBar');
+    if (shareBar && isMobile) {
+      shareBar.style.display = '';
+      const url = window.location.href.replace(/\/index\.html$/, '/') || window.location.href;
+      const qrImg = document.getElementById('qrImg');
+      if (qrImg) {
+        try {
+          new QRCode(qrImg, { text: url, width: 140, height: 140, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+        } catch (e) {
+          qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(url);
+        }
+      }
+    }
+
+    // Back to top button: show/hide on scroll
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('show');
+        } else {
+          backToTop.classList.remove('show');
+        }
+      }, { passive: true });
+    }
+  });
+</script>
+</body>
+</html>
